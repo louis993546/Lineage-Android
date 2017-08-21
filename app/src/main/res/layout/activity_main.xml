@@ -16,6 +16,6 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:listitem="@layout/view_holder_video"/>
+        tools:listitem="@layout/view_holder_video_large_thumbnail"/>
 
 </android.support.constraint.ConstraintLayout>
