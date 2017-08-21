@@ -1,0 +1,69 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion "26.0.0"
+    defaultConfig {
+        applicationId "io.github.louistsaitszho.lineage"
+        minSdkVersion 15
+        targetSdkVersion 26
+        versionCode 1
+        versionName '0.1.0'
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
+        resConfigs "en", "hi"       //these are the 2 languages we needed for now
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            pseudoLocalesEnabled false
+        }
+        debug {
+            pseudoLocalesEnabled true
+            applicationIdSuffix '.debug'
+            versionNameSuffix '-DEBUG'
+        }
+    }
+    splits {
+        abi {
+            enable true
+        }
+    }
+}
+
+ext {
+    supportLibVersion = "26.0.1"
+    retrofitVersion = "2.3.0"
+    leakCanaryVersion = "1.5.1"
+}
+
+dependencies {
+    //local libraries (right now none)
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    //kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    //support lib: appcompat
+    implementation "com.android.support:appcompat-v7:$supportLibVersion"
+    //support lib: recycler view
+    implementation "com.android.support:recyclerview-v7:$supportLibVersion"
+    //support lib: design
+    implementation "com.android.support:design:$supportLibVersion"
+    //support lib: vector drawable
+    implementation "com.android.support:support-vector-drawable:$supportLibVersion"
+    //support lib: constraint layout
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    //testing: junit
+    testImplementation 'junit:junit:4.12'
+    //testing: ??? (idk what this is for)
+    androidTestImplementation 'com.android.support.test:runner:1.0.0'
+    //testing: espresso core
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.0'
+    //lead canary family -> debug, release, and testing builds
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:${leakCanaryVersion}"
+    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${leakCanaryVersion}"
+    testImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${leakCanaryVersion}"
+}
