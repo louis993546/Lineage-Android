@@ -2,6 +2,7 @@ package io.github.louistsaitszho.lineage
 
 import android.app.Application
 import com.squareup.leakcanary.LeakCanary
+import io.realm.Realm
 
 /**
  * Created by louistsai on 21.08.17.
@@ -16,5 +17,6 @@ class App : Application() {
         }
         LeakCanary.install(this)
         //TODO crash report
+        Realm.init(this)
     }
 }
