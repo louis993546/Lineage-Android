@@ -66,4 +66,10 @@ dependencies {
     debugImplementation "com.squareup.leakcanary:leakcanary-android:${leakCanaryVersion}"
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${leakCanaryVersion}"
     testImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${leakCanaryVersion}"
+    //retrofit
+    compile "com.squareup.retrofit2:retrofit:${retrofitVersion}"
+    //gson
+    compile 'com.google.code.gson:gson:2.8.1'
+    //connection between gson and retrofit
+    compile "com.squareup.retrofit2:converter-gson:${retrofitVersion}"
 }
