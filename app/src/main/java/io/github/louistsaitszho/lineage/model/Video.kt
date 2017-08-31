@@ -1,4 +1,4 @@
-package io.github.louistsaitszho.lineage
+package io.github.louistsaitszho.lineage.model
 
 /**
  * TODO should those URLs be URL/URI instead?
