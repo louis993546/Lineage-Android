@@ -10,6 +10,10 @@ import retrofit2.Response;
 import timber.log.Timber;
 
 /**
+ * Implementation of DataCenter class using
+ * - Retrofit (that is already in a wrapper)
+ * - TODO local storage (Realm or SQLite)
+ *
  * Created by louistsai on 27.08.17.
  */
 public class DataCenterImpl implements DataCenter {

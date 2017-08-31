@@ -6,7 +6,7 @@ package io.github.louistsaitszho.lineage.model;
 public interface Cancelable {
     /**
      * TODO add param (in case there are different reason why it needs to be cancel/extra param for cancellation)
-     * @return
+     * @return true if cancel is (probably) successful
      */
     boolean cancelNow();
 }

@@ -9,5 +9,7 @@ import android.view.View
  * Created by louistsai on 21.08.17.
  */
 class VideoMediumThumbnailViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
+    init {
 
+    }
 }
