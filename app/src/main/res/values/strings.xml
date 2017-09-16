@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Lineage</string>
     <string name="content_description_video_view_holder_image_view">Thumbnail of the video</string>
+    <string name="settings">Settings</string>
 </resources>

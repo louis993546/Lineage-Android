@@ -4,11 +4,22 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.view.Menu
+import android.view.MenuInflater
 import io.github.louistsaitszho.lineage.ItemListUnit
 import io.github.louistsaitszho.lineage.R
 import io.github.louistsaitszho.lineage.RecyclerViewAdapter
 
 class MainActivity : AppCompatActivity() {
+
+
+    //This creates a menu that displays 'Settings' on the top right corner.
+    //Such Menu can be modified in the Folder app/res/menu/main_menu.xml
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val menuInflater = menuInflater
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
 
     //RecyclerView
     private var recyclerView: RecyclerView? = null
