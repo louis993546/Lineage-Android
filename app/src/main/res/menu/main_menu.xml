@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:title="@string/settings"
-        android:id="@+id/settings"></item>
+    <item android:title="@string/no_thumbnail"
+        android:id="@+id/no_thubnail"></item>
+    <item android:title="@string/medium"
+        android:id="@+id/medium"></item>
+    <item android:title="@string/large"
+        android:id="@+id/large"></item>
 
 </menu>

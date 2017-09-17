@@ -5,7 +5,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import java.util.List;
 
@@ -67,8 +70,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         //Since we don't have Thumbnail, these variables are not used
         if(!thumbnail.equals("NO_THUMBNAIL")){
-            holder.urlUnitImage.setText(listUnit.getUrlUnitImage());
-            holder.urlUnitVideo.setText(listUnit.getUrlUnitVideo());
+            //holder.urlUnitImage.setText(listUnit.getUrlUnitImage());
+            //holder.urlUnitVideo.setText(listUnit.getUrlUnitVideo());
+            Glide.with(context)
+                    .load(listUnit.getUrlUnitImage())
+                    .into(holder.unitImage);
 
         }
     }
@@ -82,7 +88,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         private TextView textUnitDescription;
-        private TextView urlUnitImage;
+        private ImageView unitImage;
         private TextView urlUnitVideo;
 
 
@@ -91,9 +97,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             super(itemView);
             if(thumbnail.equals("LARGE")){
                 //Here we Fill the Thumbnail LARGE
+                textUnitDescription = itemView.findViewById(R.id.textViewUnitDescriptionLarge);
+                unitImage = itemView.findViewById(R.id.image_view_large);
             }
             else if(thumbnail.equals("MEDIUM")){
                 //Here we Fill the Thumbnail MEDIUM
+                textUnitDescription = itemView.findViewById(R.id.textViewUnitDescriptionMedium);
+                unitImage = itemView.findViewById(R.id.image_view_medium);
             }
             else{
                 //Here we're filling with NO_THUMBNAIL

@@ -35,18 +35,18 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         //POOR IMPLEMENTATION DUE TO MY POOR KOTLIN SKILLS
-        var someSome: ItemListUnit = ItemListUnit("January","this is the URL 1","This is the URL 2")
-        var someSome1: ItemListUnit = ItemListUnit("February ","this is the URL 1","This is the URL 2")
-        var someSome2: ItemListUnit = ItemListUnit("March","this is the URL 1","This is the URL 2")
-        var someSome3: ItemListUnit = ItemListUnit("May","this is the URL 1","This is the URL 2")
-        var someSome4: ItemListUnit = ItemListUnit("June","this is the URL 1","This is the URL 2")
-        var someSome5: ItemListUnit = ItemListUnit("July","this is the URL 1","This is the URL 2")
-        var someSome6: ItemListUnit = ItemListUnit("August","this is the URL 1","This is the URL 2")
-        var someSome7: ItemListUnit = ItemListUnit("September","this is the URL 1","This is the URL 2")
-        var someSome8: ItemListUnit = ItemListUnit("October","this is the URL 1","This is the URL 2")
-        var someSome9: ItemListUnit = ItemListUnit("Noviembre","this is the URL 1","This is the URL 2")
-        var someSome10: ItemListUnit = ItemListUnit("Diciembre","this is the URL 1","This is the URL 2")
-        var someSome11: ItemListUnit = ItemListUnit("THIS IS A VERY LONG STRING TO CHECK HOW LONG TEXT BEHAVES IN THIS SITUATION. IT'S ALSO FRIDAY TODAY, RAINY DAY","this is the URL 1","This is the URL 2")
+        var someSome: ItemListUnit = ItemListUnit("January","http://flaglane.com/download/german-flag/german-flag-large.png","This is the URL 2")
+        var someSome1: ItemListUnit = ItemListUnit("February ","http://flaglane.com/download/german-flag/german-flag-large.png","This is the URL 2")
+        var someSome2: ItemListUnit = ItemListUnit("March","https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Flag_of_Hong_Kong.svg/2000px-Flag_of_Hong_Kong.svg.png","This is the URL 2")
+        var someSome3: ItemListUnit = ItemListUnit("May","http://www.freepngimg.com/download/india/4-2-india-flag-png-hd.png","This is the URL 2")
+        var someSome4: ItemListUnit = ItemListUnit("June","https://upload.wikimedia.org/wikipedia/commons/1/17/Flag_of_Mexico.png","This is the URL 2")
+        var someSome5: ItemListUnit = ItemListUnit("July","https://drive.google.com/open?id=0BzUGskuag7oNZHR2TFNsbnFxaU0","This is the URL 2")
+        var someSome6: ItemListUnit = ItemListUnit("August","https://drive.google.com/open?id=0BzUGskuag7oNZHR2TFNsbnFxaU0","This is the URL 2")
+        var someSome7: ItemListUnit = ItemListUnit("September","https://drive.google.com/open?id=0BzUGskuag7oNZHR2TFNsbnFxaU0","This is the URL 2")
+        var someSome8: ItemListUnit = ItemListUnit("October","https://drive.google.com/open?id=0BzUGskuag7oNZHR2TFNsbnFxaU0","This is the URL 2")
+        var someSome9: ItemListUnit = ItemListUnit("Noviembre","https://drive.google.com/open?id=0BzUGskuag7oNZHR2TFNsbnFxaU0","This is the URL 2")
+        var someSome10: ItemListUnit = ItemListUnit("Diciembre","https://drive.google.com/open?id=0BzUGskuag7oNZHR2TFNsbnFxaU0","This is the URL 2")
+        var someSome11: ItemListUnit = ItemListUnit("THIS IS A VERY LONG STRING TO CHECK HOW LONG TEXT BEHAVES IN THIS SITUATION. IT'S ALSO FRIDAY TODAY, RAINY DAY","http://flaglane.com/download/german-flag/german-flag-large.png","This is the URL 2")
 
 
         //List that will hold the dummy information
@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity() {
         (recyclerView)!!.setLayoutManager(LinearLayoutManager(this))
 
         //Instantiating the Adapter with the List, The Context, and the Visualisation Setting
-        adapter = RecyclerViewAdapter(listItems, this,"NO_THUMBNAIL")
+        adapter = RecyclerViewAdapter(listItems, this,"LARGE")
 
         //Setting the adapter to the Recycler View
         (recyclerView)!!.setAdapter(adapter)

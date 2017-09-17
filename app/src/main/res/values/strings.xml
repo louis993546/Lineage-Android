@@ -2,4 +2,7 @@
     <string name="app_name">Lineage</string>
     <string name="content_description_video_view_holder_image_view">Thumbnail of the video</string>
     <string name="settings">Settings</string>
+    <string name="no_thumbnail">No Thumbnail</string>
+    <string name="medium">Medium</string>
+    <string name="large">Large</string>
 </resources>
