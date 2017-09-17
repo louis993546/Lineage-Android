@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.Menu
-import android.view.MenuInflater
+import android.view.MenuItem
 import io.github.louistsaitszho.lineage.ItemListUnit
 import io.github.louistsaitszho.lineage.R
 import io.github.louistsaitszho.lineage.RecyclerViewAdapter
@@ -13,13 +13,17 @@ import io.github.louistsaitszho.lineage.RecyclerViewAdapter
 class MainActivity : AppCompatActivity() {
 
 
-    //This creates a menu that displays 'Settings' on the top right corner.
-    //Such Menu can be modified in the Folder app/res/menu/main_menu.xml
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        val menuInflater = menuInflater
-        menuInflater.inflate(R.menu.main_menu, menu)
-        return super.onCreateOptionsMenu(menu)
+    //This is the way to declare Static final in Kotlin
+    companion object{
+        const val MEDIUM = "Medium"
+        const val LARGE = "Large"
+        const val NO_THUMBNAIL = "No Thumbnail"
+
     }
+
+
+
+    private var layoutOption: String? = null
 
     //RecyclerView
     private var recyclerView: RecyclerView? = null
@@ -30,9 +34,53 @@ class MainActivity : AppCompatActivity() {
     //List holding the dummy information
     private var listItems: MutableList<ItemListUnit>? = null
 
+
+
+    //This creates a menu that displays 'Settings' on the top right corner.
+    //Such Menu can be modified in the Folder app/res/menu/main_menu.xml
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val menuInflater = menuInflater
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    //This takes the Option from the Layout and sizes the app accordingly
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        super.onOptionsItemSelected(item)
+        when (item.itemId) {
+            R.id.no_thubnail -> {
+                layoutOption = NO_THUMBNAIL
+                runAdapter()
+                return true
+            }
+            R.id.medium -> {
+                layoutOption = MEDIUM
+                runAdapter()
+                return true
+            }
+            R.id.large -> {
+                layoutOption = LARGE
+                runAdapter()
+                return true
+            }
+            else -> return false
+        }
+
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        //Default layoutOption
+        layoutOption = NO_THUMBNAIL
+
+        //Method that Instantiates and runs the adapter
+        runAdapter()
+    }
+
+
+    fun runAdapter(){
 
         //POOR IMPLEMENTATION DUE TO MY POOR KOTLIN SKILLS
         var someSome: ItemListUnit = ItemListUnit("January","http://flaglane.com/download/german-flag/german-flag-large.png","This is the URL 2")
@@ -48,21 +96,19 @@ class MainActivity : AppCompatActivity() {
         var someSome10: ItemListUnit = ItemListUnit("Diciembre","https://drive.google.com/open?id=0BzUGskuag7oNZHR2TFNsbnFxaU0","This is the URL 2")
         var someSome11: ItemListUnit = ItemListUnit("THIS IS A VERY LONG STRING TO CHECK HOW LONG TEXT BEHAVES IN THIS SITUATION. IT'S ALSO FRIDAY TODAY, RAINY DAY","http://flaglane.com/download/german-flag/german-flag-large.png","This is the URL 2")
 
-
         //List that will hold the dummy information
         listItems = mutableListOf(someSome, someSome1,someSome2,someSome3,someSome4,someSome5,someSome6, someSome7,someSome8,someSome9,someSome10,someSome11)
+
 
         //Instantiating and setting recycler view attributes
         recyclerView = findViewById(R.id.recycler_view)
         (recyclerView)!!.setHasFixedSize(true)
         (recyclerView)!!.setLayoutManager(LinearLayoutManager(this))
 
-        //Instantiating the Adapter with the List, The Context, and the Visualisation Setting
-        adapter = RecyclerViewAdapter(listItems, this,"LARGE")
+        //Instantiating the Adapter with the List, The Context, and the Layout Size Setting
+        adapter = RecyclerViewAdapter(listItems, this, layoutOption)
 
         //Setting the adapter to the Recycler View
         (recyclerView)!!.setAdapter(adapter)
-
-
     }
 }

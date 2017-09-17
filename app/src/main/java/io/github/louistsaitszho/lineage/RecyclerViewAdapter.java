@@ -12,6 +12,8 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 
+import io.github.louistsaitszho.lineage.activities.MainActivity;
+
 /**
  * Created by lsteamer on 15/09/2017.
  */
@@ -46,11 +48,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         //Depending on the setting 'thumbnail' we use a different layout
         View v;
-        if(thumbnail.equals("LARGE")){
+        if(thumbnail.equals(MainActivity.LARGE)){
             v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.view_holder_video_large_thumbnail, parent, false);
         }
-        else if(thumbnail.equals("MEDIUM")){
+        else if(thumbnail.equals(MainActivity.MEDIUM)){
             v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.view_holder_video_medium_thumbnail, parent, false);
         }
@@ -62,6 +64,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return new ViewHolder(v);
     }
 
+
+
     //Method gives the ViewHolder it's contents
     @Override
     public void onBindViewHolder(RecyclerViewAdapter.ViewHolder holder, int position) {
@@ -69,7 +73,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.textUnitDescription.setText(listUnit.getTextUnitDescription());
 
         //Since we don't have Thumbnail, these variables are not used
-        if(!thumbnail.equals("NO_THUMBNAIL")){
+        if(!thumbnail.equals(MainActivity.NO_THUMBNAIL)){
             //holder.urlUnitImage.setText(listUnit.getUrlUnitImage());
             //holder.urlUnitVideo.setText(listUnit.getUrlUnitVideo());
             Glide.with(context)
@@ -95,12 +99,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         //Constructor
         public ViewHolder(View itemView) {
             super(itemView);
-            if(thumbnail.equals("LARGE")){
+            if(thumbnail.equals(MainActivity.LARGE)){
                 //Here we Fill the Thumbnail LARGE
                 textUnitDescription = itemView.findViewById(R.id.textViewUnitDescriptionLarge);
                 unitImage = itemView.findViewById(R.id.image_view_large);
             }
-            else if(thumbnail.equals("MEDIUM")){
+            else if(thumbnail.equals(MainActivity.MEDIUM)){
                 //Here we Fill the Thumbnail MEDIUM
                 textUnitDescription = itemView.findViewById(R.id.textViewUnitDescriptionMedium);
                 unitImage = itemView.findViewById(R.id.image_view_medium);
