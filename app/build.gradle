@@ -75,10 +75,10 @@ dependencies {
     testImplementation 'junit:junit:4.12'
 
     //testing: ??? (idk what this is for)
-    androidTestImplementation 'com.android.support.test:runner:1.0.0'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
 
     //testing: espresso core
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.0'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 
     //lead canary family -> debug, release, and testing builds
     debugImplementation "com.squareup.leakcanary:leakcanary-android:${leakCanaryVersion}"
