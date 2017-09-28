@@ -3,7 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Lineage-Android.iml" filepath="$PROJECT_DIR$/Lineage-Android.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Lineage-android.iml" filepath="$PROJECT_DIR$/Lineage-android.iml" />
+<!--       uncommon the next line if it does not work -->
+<!--       <module fileurl="file://$PROJECT_DIR$/Lineage-android.iml" filepath="$PROJECT_DIR$/Lineage-android.iml" /> -->
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
