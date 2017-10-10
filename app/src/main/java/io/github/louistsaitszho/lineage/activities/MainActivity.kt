@@ -79,18 +79,18 @@ class MainActivity : AppCompatActivity() {
 
         //POOR IMPLEMENTATION DUE TO MY POOR KOTLIN SKILLS
         //Also, just a temporal implementation.
-        val someSome = ItemListUnit("January","http://flaglane.com/download/german-flag/german-flag-large.png","This is the URL 2")
-        val someSome1 = ItemListUnit("February ","http://flaglane.com/download/german-flag/german-flag-large.png","This is the URL 2")
-        val someSome2 = ItemListUnit("March","https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Flag_of_Hong_Kong.svg/2000px-Flag_of_Hong_Kong.svg.png","This is the URL 2")
-        val someSome3 = ItemListUnit("May","http://www.freepngimg.com/download/india/4-2-india-flag-png-hd.png","This is the URL 2")
-        val someSome4 = ItemListUnit("June","https://upload.wikimedia.org/wikipedia/commons/1/17/Flag_of_Mexico.png","This is the URL 2")
-        val someSome5 = ItemListUnit("July","https://drive.google.com/open?id=0BzUGskuag7oNZHR2TFNsbnFxaU0","This is the URL 2")
-        val someSome6 = ItemListUnit("August","https://drive.google.com/open?id=0BzUGskuag7oNZHR2TFNsbnFxaU0","This is the URL 2")
-        val someSome7 = ItemListUnit("September","https://drive.google.com/open?id=0BzUGskuag7oNZHR2TFNsbnFxaU0","This is the URL 2")
-        val someSome8 = ItemListUnit("October","https://drive.google.com/open?id=0BzUGskuag7oNZHR2TFNsbnFxaU0","This is the URL 2")
-        val someSome9 = ItemListUnit("Noviembre","https://drive.google.com/open?id=0BzUGskuag7oNZHR2TFNsbnFxaU0","This is the URL 2")
-        val someSome10 = ItemListUnit("Diciembre","https://drive.google.com/open?id=0BzUGskuag7oNZHR2TFNsbnFxaU0","This is the URL 2")
-        val someSome11 = ItemListUnit("THIS IS A VERY LONG STRING TO CHECK HOW LONG TEXT BEHAVES IN THIS SITUATION. IT'S ALSO FRIDAY TODAY, RAINY DAY","http://flaglane.com/download/german-flag/german-flag-large.png","This is the URL 2")
+        val someSome = ItemListUnit("January","http://flaglane.com/download/german-flag/german-flag-large.png","http://techslides.com/demos/sample-videos/small.mp4")
+        val someSome1 = ItemListUnit("February ","http://flaglane.com/download/german-flag/german-flag-large.png","http://techslides.com/demos/sample-videos/small.mp4")
+        val someSome2 = ItemListUnit("March","https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Flag_of_Hong_Kong.svg/2000px-Flag_of_Hong_Kong.svg.png","http://techslides.com/demos/sample-videos/small.mp4")
+        val someSome3 = ItemListUnit("May","http://www.freepngimg.com/download/india/4-2-india-flag-png-hd.png","http://techslides.com/demos/sample-videos/small.mp4")
+        val someSome4 = ItemListUnit("June","https://upload.wikimedia.org/wikipedia/commons/1/17/Flag_of_Mexico.png","http://techslides.com/demos/sample-videos/small.mp4")
+        val someSome5 = ItemListUnit("July","https://drive.google.com/open?id=0BzUGskuag7oNZHR2TFNsbnFxaU0","http://techslides.com/demos/sample-videos/small.mp4")
+        val someSome6 = ItemListUnit("August","https://drive.google.com/open?id=0BzUGskuag7oNZHR2TFNsbnFxaU0","http://techslides.com/demos/sample-videos/small.mp4")
+        val someSome7 = ItemListUnit("September","https://drive.google.com/open?id=0BzUGskuag7oNZHR2TFNsbnFxaU0","http://techslides.com/demos/sample-videos/small.mp4")
+        val someSome8 = ItemListUnit("October","https://drive.google.com/open?id=0BzUGskuag7oNZHR2TFNsbnFxaU0","http://techslides.com/demos/sample-videos/small.mp4")
+        val someSome9 = ItemListUnit("Noviembre","https://drive.google.com/open?id=0BzUGskuag7oNZHR2TFNsbnFxaU0","http://techslides.com/demos/sample-videos/small.mp4")
+        val someSome10 = ItemListUnit("Diciembre","https://drive.google.com/open?id=0BzUGskuag7oNZHR2TFNsbnFxaU0","http://techslides.com/demos/sample-videos/small.mp4")
+        val someSome11 = ItemListUnit("THIS IS A VERY LONG STRING TO CHECK HOW LONG TEXT BEHAVES IN THIS SITUATION. IT'S ALSO FRIDAY TODAY, RAINY DAY","http://flaglane.com/download/german-flag/german-flag-large.png","http://techslides.com/demos/sample-videos/small.mp4")
 
         //List that will hold the dummy information
         listItems = mutableListOf(someSome, someSome1,someSome2,someSome3,someSome4,someSome5,someSome6, someSome7,someSome8,someSome9,someSome10,someSome11)
@@ -99,6 +99,8 @@ class MainActivity : AppCompatActivity() {
 
         //Instantiating the adapter with the magic of Kotlin:
         recycler_view.layoutManager = LinearLayoutManager(this)
+
+
         recycler_view.setHasFixedSize(true)
         //Instantiating the Adapter with the List, The Context, and the Layout Size Setting & Setting the adapter to Recycler View
         recycler_view.adapter = RecyclerViewAdapter(listItems, this, layoutOption)

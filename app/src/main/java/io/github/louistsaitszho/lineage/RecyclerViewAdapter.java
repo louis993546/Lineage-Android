@@ -1,12 +1,14 @@
 package io.github.louistsaitszho.lineage;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -69,8 +71,33 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     //Method gives the ViewHolder it's contents
     @Override
     public void onBindViewHolder(RecyclerViewAdapter.ViewHolder holder, int position) {
-        ItemListUnit listUnit = listContents.get(position);
+        final ItemListUnit listUnit = listContents.get(position);
         holder.textUnitDescription.setText(listUnit.getTextUnitDescription());
+
+
+
+        //Here we call the launchVideoActivity method (which in turn creates the New activity where the video will be played)
+        if(thumbnail.equals(MainActivity.LARGE)||thumbnail.equals(MainActivity.MEDIUM)){
+            holder.unitImage.setOnClickListener(new View.OnClickListener(){
+
+                @Override
+                public void onClick(View view) {
+                    launchVideoActivity(listUnit.getUrlUnitVideo());
+                }
+            });
+        }
+        else{
+            holder.textUnitDescription.setOnClickListener(new View.OnClickListener(){
+
+                @Override
+                public void onClick(View view) {
+                    launchVideoActivity(listUnit.getUrlUnitVideo());
+
+                }
+            });
+
+        }
+
 
         //Since we don't have Thumbnail, these variables are not used
         if(!thumbnail.equals(MainActivity.NO_THUMBNAIL)){
@@ -83,10 +110,29 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
     }
 
+    //Method that plays the video.
+    /*
+        At the moment, I'm launching a new Activity to play it,
+        but if specs change, this should be modified
+     */
+    public void launchVideoActivity(String videoURL){
+
+        Intent intent = new Intent(context, VideoPlayerActivity.class);
+        intent.putExtra("videoURL",videoURL);
+
+
+        context.startActivity(intent);
+
+
+
+    }
+
+
     @Override
     public int getItemCount() {
             return listContents.size();
     }
+
 
     //Reference to the Views for each data item
     public class ViewHolder extends RecyclerView.ViewHolder{
@@ -103,6 +149,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 //Here we Fill the Thumbnail LARGE
                 textUnitDescription = itemView.findViewById(R.id.textViewUnitDescriptionLarge);
                 unitImage = itemView.findViewById(R.id.image_view_large);
+
             }
             else if(thumbnail.equals(MainActivity.MEDIUM)){
                 //Here we Fill the Thumbnail MEDIUM
@@ -114,6 +161,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 textUnitDescription = itemView.findViewById(R.id.textViewUnitDescriptionNoThumbnail);
             }
         }
+
+
     }
 
 
