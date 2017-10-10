@@ -5,4 +5,5 @@
     <string name="no_thumbnail">No Thumbnail</string>
     <string name="medium">Medium</string>
     <string name="large">Large</string>
+    <string name="wait">Please Wait...</string>
 </resources>
