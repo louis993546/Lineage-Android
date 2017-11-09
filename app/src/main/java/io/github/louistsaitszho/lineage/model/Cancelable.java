@@ -1,7 +1,7 @@
 package io.github.louistsaitszho.lineage.model;
 
 /**
- * Created by louistsai on 31.08.17.
+ * Created by Louis on 31.08.17.
  */
 public interface Cancelable {
     /**

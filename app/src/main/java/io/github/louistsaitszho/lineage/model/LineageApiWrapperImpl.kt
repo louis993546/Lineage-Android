@@ -2,16 +2,24 @@ package io.github.louistsaitszho.lineage.model
 
 import io.github.louistsaitszho.lineage.ServerConfig
 import io.github.louistsaitszho.lineage.attributes.VideoAttribute
+import io.github.louistsaitszho.lineage.model.attributes.ModuleAttribute
+import io.github.louistsaitszho.lineage.model.poko.JsonApiResponse
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 /**
- * Created by louistsai on 31.08.17.
+ * Implementation of LineageApiWrapper: actually fetch the content
+ * Why not just directly use LineageApiInterface?
+ * - So that I can skip some boiler plate for you, e.g. fetching access token
+ * Created by Louis Tsai on 31.08.17.
  */
 class LineageApiWrapperImpl : LineageApiWrapper {
-    val apiClient : LineageApiInterface
+    private val apiClient : LineageApiInterface
 
+    /**
+     * Constructor in kotlin looks weird
+     */
     init {
         val retrofit = Retrofit.Builder()
                 .baseUrl(ServerConfig.apiHost)
@@ -20,7 +28,17 @@ class LineageApiWrapperImpl : LineageApiWrapper {
         apiClient = retrofit.create(LineageApiInterface::class.java)
     }
 
-    override fun getVideo(): Call<List<Data<VideoAttribute>>> {
-        return apiClient.fetchVideos()
+    /**
+     * TODO hard code access token
+     */
+    override fun getVideo(moduleId: String): Call<JsonApiResponse<VideoAttribute>> {
+        return apiClient.fetchVideos("123", moduleId)
+    }
+
+    /**
+     * TODO hard code access token
+     */
+    override fun getModules(): Call<JsonApiResponse<ModuleAttribute>> {
+        return apiClient.fetchModules("123")
     }
 }

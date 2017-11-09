@@ -1,14 +1,30 @@
 package io.github.louistsaitszho.lineage.model
 
 import io.github.louistsaitszho.lineage.attributes.VideoAttribute
+import io.github.louistsaitszho.lineage.model.attributes.ModuleAttribute
+import io.github.louistsaitszho.lineage.model.poko.JsonApiResponse
 import retrofit2.Call
 
 /**
- * Created by louistsai on 31.08.17.
+ * What is this?
+ * > Definition of what you can actually do with the API
+ * Why is this an interface? Why not just write the implementation
+ * > I think this is like a best practice, since this makes future changes easier (if you want to
+ * completely re-write the logic just create a separate class that implement this interface, and you
+ * can leave the old one alone)
+ * Created by Louis Tsai on 31.08.17.
  */
 interface LineageApiWrapper {
     /**
-     * call GET videos
+     * Call GET videos
+     * @param moduleId is the id of the module you want to access
+     * @return a call object (so that you can do whatever you want to it)
      */
-    fun getVideo() : Call<List<Data<VideoAttribute>>>
+    fun getVideo(moduleId: String): Call<JsonApiResponse<VideoAttribute>>
+
+    /**
+     * Call GET modules
+     * @return a call object (so that you can do whatever you want to it)
+     */
+    fun getModules(): Call<JsonApiResponse<ModuleAttribute>>
 }
