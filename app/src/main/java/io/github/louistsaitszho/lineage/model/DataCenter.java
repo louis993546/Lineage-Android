@@ -14,6 +14,8 @@ public interface DataCenter {
      */
     Cancelable getVideos(DataListener<List<Video>> callback);
 
+    Cancelable getModules(DataListener<List<Module>> callback);
+
     /**
      * Most implementations of data storage or fetching library requires termination of something.
      * Implement whatever you need to do so that whoever use it don't need to know exactly how to

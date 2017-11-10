@@ -13,6 +13,7 @@ import io.github.louistsaitszho.lineage.model.Video;
 /**
  * Created by louistsai on 27.08.17.
  */
+@Deprecated
 public class VideosAdapter extends RecyclerView.Adapter {
     //constants
     private final static int VIEW_TYPE_THUMBNAIL_NONE = 0;
