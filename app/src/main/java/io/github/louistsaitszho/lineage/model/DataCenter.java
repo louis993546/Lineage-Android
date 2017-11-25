@@ -12,7 +12,7 @@ public interface DataCenter {
      * Get a list of videos
      * @return A Cancelable object so that you can cancel the request if necessary
      */
-    Cancelable getVideos(DataListener<List<Video>> callback);
+    Cancelable getVideos(String moduleId, DataListener<List<Video>> callback);
 
     Cancelable getModules(DataListener<List<Module>> callback);
 

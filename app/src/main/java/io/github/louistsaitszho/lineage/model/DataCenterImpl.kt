@@ -26,8 +26,8 @@ class DataCenterImpl : DataCenter {
      * @return a Cancelable object so you can cancel operation if you want to (memory leak, prevent
      * loading when the activity is dead, etc.)
      */
-    override fun getVideos(callback: DataListener<List<Video>>): Cancelable {
-        val call = apiWrapper.getVideo("123")
+    override fun getVideos(moduleId: String, callback: DataListener<MutableList<Video>>): Cancelable? {
+        val call = apiWrapper.getVideo(moduleId)
         val cancelable = Cancelable {
             //TODO some kind of flag to indicate "Don't even try to return anything back"?
             if (call.isExecuted)
@@ -38,8 +38,10 @@ class DataCenterImpl : DataCenter {
         call.enqueue(object : Callback<JsonApiResponse<VideoAttribute>> {
             override fun onResponse(call: Call<JsonApiResponse<VideoAttribute>>?, response: Response<JsonApiResponse<VideoAttribute>>?) {
                 //todo check errors
+                Timber.d(response.toString())
                 if (response?.body() != null && response.body()?.data != null) {
                     val outputList = ArrayList<Video>()
+                    Timber.d(response.body().toString())
                     response.body()?.data?.forEach {
                         Timber.d(it.toString())
                         outputList.add(Video(it))

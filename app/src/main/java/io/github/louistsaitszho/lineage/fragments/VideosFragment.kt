@@ -6,12 +6,14 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import io.github.louistsaitszho.lineage.OnItemClickListener
 import io.github.louistsaitszho.lineage.R
 import io.github.louistsaitszho.lineage.RecyclerViewAdapter
 import io.github.louistsaitszho.lineage.activities.MainActivity
 import io.github.louistsaitszho.lineage.model.*
 import kotlinx.android.synthetic.main.fragment_videos.*
+import timber.log.Timber
 
 /**
  * This fragment display a list of videos
@@ -28,16 +30,22 @@ class VideosFragment : Fragment(), OnItemClickListener<Video> {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        getVideoCancelable = dataCenter.getVideos(object: DataListener<List<Video>> {
+        getVideoCancelable = dataCenter.getVideos("1", object: DataListener<List<Video>> {
             override fun onSuccess(source: Int, result: List<Video>?) {
-                videosAdapter = RecyclerViewAdapter(result, MainActivity.NO_THUMBNAIL)
-//                val recyclerView : RecyclerView? = view?.findViewById(R.id.recycler_view)
-                recycler_view.adapter = videosAdapter
-                recycler_view.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                val listIsEmpty = result?.isEmpty()
+                if (listIsEmpty == true) {
+                    videosAdapter = RecyclerViewAdapter(result, MainActivity.NO_THUMBNAIL)
+                    recycler_view.adapter = videosAdapter
+                    recycler_view.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                } else {
+                    //TODO show something
+                    Toast.makeText(this@VideosFragment.context, "No videos yet!", Toast.LENGTH_LONG).show()
+                }
             }
 
             override fun onFailure(error: Throwable) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                Timber.d("get videos failed")
+                Toast.makeText(this@VideosFragment.context, "Something's wrong when fetching videos", Toast.LENGTH_LONG).show()
             }
         })
     }
@@ -53,6 +61,7 @@ class VideosFragment : Fragment(), OnItemClickListener<Video> {
      * 2) Ask user to download it if not available
      */
     override fun onSelect(item: Video) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        Timber.d("a video selected")
+        Toast.makeText(this.context, item.toString(), Toast.LENGTH_LONG).show()
     }
 }
