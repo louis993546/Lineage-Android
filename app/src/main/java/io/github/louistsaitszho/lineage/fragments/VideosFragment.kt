@@ -32,13 +32,16 @@ class VideosFragment : Fragment(), OnItemClickListener<Video> {
         super.onViewCreated(view, savedInstanceState)
         getVideoCancelable = dataCenter.getVideos("1", object: DataListener<List<Video>> {
             override fun onSuccess(source: Int, result: List<Video>?) {
-                val listIsEmpty = result?.isEmpty()
-                if (listIsEmpty == true) {
+                var listIsEmpty = true
+                if (result != null && result.isEmpty().not()) {
+                    listIsEmpty = false
+                }
+                if (listIsEmpty.not()) {
                     videosAdapter = RecyclerViewAdapter(result, MainActivity.NO_THUMBNAIL)
                     recycler_view.adapter = videosAdapter
                     recycler_view.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                 } else {
-                    //TODO show something
+//                    TODO show something
                     Toast.makeText(this@VideosFragment.context, "No videos yet!", Toast.LENGTH_LONG).show()
                 }
             }
