@@ -2,7 +2,6 @@ package io.github.louistsaitszho.lineage
 
 import android.app.Application
 import com.squareup.leakcanary.LeakCanary
-import io.realm.Realm
 import timber.log.Timber
 
 /**
@@ -19,6 +18,5 @@ class App : Application() {
         Timber.plant(Timber.DebugTree())
         LeakCanary.install(this)
         //TODO crash report (check how to integrate with Timber)
-        Realm.init(this)
     }
 }
