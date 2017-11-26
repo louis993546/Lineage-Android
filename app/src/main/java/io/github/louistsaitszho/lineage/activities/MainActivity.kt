@@ -65,6 +65,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+
         dataCenter.getSchoolCodeLocally(object: DataListener<String> {
             override fun onSuccess(source: Int, result: String?) {
                 //TODO inflate menu accordingly
@@ -77,6 +79,8 @@ class MainActivity : AppCompatActivity() {
                         }
                         navigation_view.setNavigationItemSelectedListener {
                             Toast.makeText(this@MainActivity, "a module selected: " + it.title, Toast.LENGTH_LONG).show()
+                            supportActionBar?.title = it.title
+                            it.isChecked = true
                             true
                         }
                     }
