@@ -95,4 +95,7 @@ dependencies {
 
     //Timber (debug messages make easier)
     implementation 'com.jakewharton.timber:timber:4.6.0'
+
+    //circular image view (why google why)
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
 }

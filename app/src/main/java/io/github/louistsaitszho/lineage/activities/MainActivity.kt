@@ -70,6 +70,7 @@ class MainActivity : AppCompatActivity() {
                 dataCenter.getModules(object: DataListener<MutableList<Module>> {
                     override fun onSuccess(source: Int, result: MutableList<Module>?) {
                         //todo i am just gonna ignore the whole offline cache thing for now
+                        //todo figure out how to add sub header "Modules"
                         result?.forEachIndexed { index, module ->
                             navigation_view.menu.add(0, index, index, module.name)
                         }
