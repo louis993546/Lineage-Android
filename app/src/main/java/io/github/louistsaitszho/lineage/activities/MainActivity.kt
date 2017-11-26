@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import io.github.louistsaitszho.lineage.R
 import io.github.louistsaitszho.lineage.model.DataCenterImpl
 import io.github.louistsaitszho.lineage.model.DataListener
@@ -73,6 +74,10 @@ class MainActivity : AppCompatActivity() {
                         //todo figure out how to add sub header "Modules"
                         result?.forEachIndexed { index, module ->
                             navigation_view.menu.add(0, index, index, module.name)
+                        }
+                        navigation_view.setNavigationItemSelectedListener {
+                            Toast.makeText(this@MainActivity, "a module selected: " + it.title, Toast.LENGTH_LONG).show()
+                            true
                         }
                     }
 
