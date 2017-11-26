@@ -1,5 +1,6 @@
 package io.github.louistsaitszho.lineage.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -20,9 +21,15 @@ import timber.log.Timber
  * Created by louistsai on 31.08.17.
  */
 class VideosFragment : Fragment(), OnItemClickListener<Video> {
-    private val dataCenter : DataCenter = DataCenterImpl()
+//    private val dataCenter : DataCenter = DataCenterImpl(this.context)
+    var dataCenter: DataCenter? = null
     private var getVideoCancelable : Cancelable? = null
     private var videosAdapter : RecyclerViewAdapter? = null
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        dataCenter = DataCenterImpl(context)
+    }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater?.inflate(R.layout.fragment_videos, container, false)
@@ -30,7 +37,7 @@ class VideosFragment : Fragment(), OnItemClickListener<Video> {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        getVideoCancelable = dataCenter.getVideos("1", object: DataListener<List<Video>> {
+        getVideoCancelable = dataCenter?.getVideos("1", object: DataListener<List<Video>> {
             override fun onSuccess(source: Int, result: List<Video>?) {
                 var listIsEmpty = true
                 if (result != null && result.isEmpty().not()) {

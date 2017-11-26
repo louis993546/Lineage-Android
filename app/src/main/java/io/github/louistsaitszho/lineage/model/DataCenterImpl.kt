@@ -1,5 +1,6 @@
 package io.github.louistsaitszho.lineage.model
 
+import android.content.Context
 import io.github.louistsaitszho.lineage.attributes.VideoAttribute
 import io.github.louistsaitszho.lineage.model.attributes.ModuleAttribute
 import io.github.louistsaitszho.lineage.model.poko.JsonApiResponse
@@ -16,8 +17,9 @@ import java.util.*
  *
  * Created by Louis Tsai on 27.08.17.
  */
-class DataCenterImpl : DataCenter {
+class DataCenterImpl(context: Context?) : DataCenter {
     private val apiWrapper = LineageApiWrapperImpl()
+    private val preferenceStorage = PreferenceStorageImpl(context)
 
     /**
      * TODO retrieve data from local storage
@@ -79,6 +81,7 @@ class DataCenterImpl : DataCenter {
                 //technically error and body can exist together, that's why this is not a else if. Whoever calls it should decide what to do instead
                 if (response?.body()?.data != null) {
                     val outputList = ArrayList<Module>()
+                    Timber.d(response.body().toString())
                     response.body()?.data?.forEach {
                         outputList.add(Module(it))
                     }
@@ -95,6 +98,19 @@ class DataCenterImpl : DataCenter {
         })
 
         return cancelable
+    }
+
+    /**
+     * TODO temporarily return hard code school key
+     */
+    override fun getSchoolCodeLocally(callback: DataListener<String>): Cancelable? {
+        callback.onSuccess(DataListener.SOURCE_LOCAL, "123")
+//        if (preferenceStorage.hasSchoolKey()) {
+//            callback.onSuccess(DataListener.SOURCE_LOCAL, preferenceStorage.getSchoolKey())
+//        } else {
+//            callback.onFailure(Throwable("No school key"))
+//        }
+        return null
     }
 
     override fun close() {

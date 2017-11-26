@@ -17,6 +17,14 @@ public interface DataCenter {
     Cancelable getModules(DataListener<List<Module>> callback);
 
     /**
+     * Get the school code
+     * This always gets stored on the device itself, because this is how the cloud know which school
+     * this phone is suppose to be at
+     * @return the school code from local storage, should be nullable
+     */
+    Cancelable getSchoolCodeLocally(DataListener<String> callback);
+
+    /**
      * Most implementations of data storage or fetching library requires termination of something.
      * Implement whatever you need to do so that whoever use it don't need to know exactly how to
      * close each things specifically
