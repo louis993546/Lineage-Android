@@ -1,10 +1,13 @@
 package io.github.louistsaitszho.lineage.activities
 
+import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
+import android.widget.Toast
 import io.github.louistsaitszho.lineage.R
-
+import io.github.louistsaitszho.lineage.model.DataCenterImpl
+import io.github.louistsaitszho.lineage.model.DataListener
+import io.github.louistsaitszho.lineage.model.School
 import kotlinx.android.synthetic.main.activity_sign_in.*
 
 class SignInActivity : AppCompatActivity() {
@@ -13,9 +16,21 @@ class SignInActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_in)
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+        fab.setOnClickListener { _ ->
+            //todo put some spinner wheel or something
+            val schoolCode = edit_text_school_code.text.toString()
+            val dataCenter = DataCenterImpl(this)
+            dataCenter.signIn(schoolCode, object : DataListener<School> {
+                override fun onSuccess(source: Int, result: School?) {
+                    val intent = Intent(this@SignInActivity, MainActivity::class.java)
+                    startActivity(intent)
+                }
+
+                override fun onFailure(error: Throwable) {
+                    //todo figure out how to display error message
+                    Toast.makeText(this@SignInActivity, "Failed", Toast.LENGTH_LONG).show()
+                }
+            })
         }
     }
 

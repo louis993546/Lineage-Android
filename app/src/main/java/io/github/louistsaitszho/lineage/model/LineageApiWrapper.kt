@@ -3,6 +3,7 @@ package io.github.louistsaitszho.lineage.model
 import io.github.louistsaitszho.lineage.attributes.VideoAttribute
 import io.github.louistsaitszho.lineage.model.attributes.ModuleAttribute
 import io.github.louistsaitszho.lineage.model.poko.JsonApiResponse
+import io.github.louistsaitszho.lineage.model.poko.attributes.SchoolAttribute
 import retrofit2.Call
 
 /**
@@ -27,4 +28,9 @@ interface LineageApiWrapper {
      * @return a call object (so that you can do whatever you want to it)
      */
     fun getModules(): Call<JsonApiResponse<ModuleAttribute>>
+
+    /**
+     *
+     */
+    fun signIn(schoolCode: String): Call<JsonApiResponse<SchoolAttribute>>
 }

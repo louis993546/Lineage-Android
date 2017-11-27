@@ -4,6 +4,7 @@ import android.content.Context
 import io.github.louistsaitszho.lineage.attributes.VideoAttribute
 import io.github.louistsaitszho.lineage.model.attributes.ModuleAttribute
 import io.github.louistsaitszho.lineage.model.poko.JsonApiResponse
+import io.github.louistsaitszho.lineage.model.poko.attributes.SchoolAttribute
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -104,13 +105,58 @@ class DataCenterImpl(context: Context?) : DataCenter {
      * TODO temporarily return hard code school key
      */
     override fun getSchoolCodeLocally(callback: DataListener<String>): Cancelable? {
-        callback.onSuccess(DataListener.SOURCE_LOCAL, "123")
-//        if (preferenceStorage.hasSchoolKey()) {
-//            callback.onSuccess(DataListener.SOURCE_LOCAL, preferenceStorage.getSchoolKey())
-//        } else {
-//            callback.onFailure(Throwable("No school key"))
-//        }
+//        callback.onSuccess(DataListener.SOURCE_LOCAL, "123")
+        if (preferenceStorage.hasSchoolKey()) {
+            callback.onSuccess(DataListener.SOURCE_LOCAL, preferenceStorage.getSchoolKey())
+        } else {
+            callback.onFailure(Throwable("No school key"))
+        }
         return null
+    }
+
+    /**
+     * call the sign in API and save result accordingly
+     */
+    override fun signIn(schoolCode: String, callback: DataListener<School>): Cancelable? {
+        val call = apiWrapper.signIn(schoolCode)
+        val cancelable = Cancelable {
+            if (call.isExecuted)
+                call.cancel()
+            true
+        }
+
+        call.enqueue(object : Callback<JsonApiResponse<SchoolAttribute>> {
+            override fun onResponse(call: Call<JsonApiResponse<SchoolAttribute>>?, response: Response<JsonApiResponse<SchoolAttribute>>?) {
+                if (response?.errorBody() != null) {
+                    //todo i need something to handle standard networking error and stuff
+                    Timber.e(Throwable("user encounter networking error when calling GET schools: $response."))
+                } else if (response?.body()?.error != null && response.body()?.error?.isNotEmpty() == true) {
+                    //todo this will be the response specific error (and it's handling)
+                }
+                //technically error and body can exist together, that's why this is not a else if. Whoever calls it should decide what to do instead
+                //todo if the kotlin code is correct this should not run into NPE but still be careful
+                when {
+                    response == null -> onFailure(call, Throwable("response is null"))
+                    response.body() == null -> onFailure(call, Throwable("response body is null"))
+                    response.body()?.data == null -> onFailure(call, Throwable("response body has no data"))
+                    response.body()?.data?.size != 1 -> onFailure(call, Throwable("returns school size != 1"))
+                    response.body()?.data?.get(0) == null -> onFailure(call, Throwable("school[0] is null"))
+                    call?.isCanceled == false -> {
+                        preferenceStorage.setSchoolKey(schoolCode)
+                        callback.onSuccess(DataListener.SOURCE_REMOTE, School(response.body()!!.data!![0]))
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<JsonApiResponse<SchoolAttribute>>?, t: Throwable?) {
+                Timber.e(t)
+                if (call?.isCanceled == false)
+                    callback.onFailure(Throwable("API returns error when you are trying to sign in (GET schools)", t))
+            }
+
+        })
+
+        return cancelable
     }
 
     override fun close() {

@@ -24,6 +24,8 @@ public interface DataCenter {
      */
     Cancelable getSchoolCodeLocally(DataListener<String> callback);
 
+    Cancelable signIn(String schoolCode, DataListener<School> callback);
+
     /**
      * Most implementations of data storage or fetching library requires termination of something.
      * Implement whatever you need to do so that whoever use it don't need to know exactly how to
