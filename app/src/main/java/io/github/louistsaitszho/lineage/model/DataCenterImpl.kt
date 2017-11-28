@@ -20,7 +20,7 @@ import java.util.*
  */
 class DataCenterImpl(context: Context?) : DataCenter {
     private val apiWrapper = LineageApiWrapperImpl()
-    private val preferenceStorage = PreferenceStorageImpl(context)
+    private val preferenceStorage : PreferenceStorage = PreferenceStorageImpl(context)
 
     /**
      * TODO retrieve data from local storage
@@ -157,6 +157,11 @@ class DataCenterImpl(context: Context?) : DataCenter {
         })
 
         return cancelable
+    }
+
+    override fun getNeedsDownloadModulesId(callback: DataListener<List<String>>): Cancelable? {
+        callback.onSuccess(DataListener.SOURCE_LOCAL, preferenceStorage.getNeedsDownloadModulesId().toList())
+        return null
     }
 
     override fun close() {

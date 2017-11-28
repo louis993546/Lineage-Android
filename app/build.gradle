@@ -38,7 +38,7 @@ android {
 ext {
     supportLibVersion = "26.1.0"
     retrofitVersion = "2.3.0"
-    leakCanaryVersion = "1.5.1"
+    leakCanaryVersion = "1.5.4"
 }
 
 dependencies {
@@ -98,4 +98,7 @@ dependencies {
 
     //circular image view (why google why)
     implementation 'de.hdodenhof:circleimageview:2.2.0'
+
+    //firebase job dispatcher
+    implementation 'com.firebase:firebase-jobdispatcher:0.8.4'
 }

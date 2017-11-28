@@ -38,12 +38,13 @@ class PreferenceStorageImpl(private val context: Context?) : PreferenceStorage {
                 ?.apply()
     }
 
-//    /**
-//     * TODO will this create NPE with null.toList()???
-//     */
-//    override fun getNeedsDownloadModulesId(): List<String> {
-//        return getUserPreference()?.getStringSet(Keys.NEEDS_DOWNLOAD_MODULE_LIST_KEY, null)?.toList()
-//    }
+    override fun getNeedsDownloadModulesId(): Set<String> {
+        var moduleIdSet = getUserPreference()?.getStringSet(Keys.NEEDS_DOWNLOAD_MODULE_LIST_KEY, null)
+        if (moduleIdSet == null) {
+            moduleIdSet = setOf()   //make it an empty set
+        }
+        return moduleIdSet
+    }
 
 //    //TODO think about how to refactor add and remove NeedsDownloadModulesId -> they are only different by 2 line
 //

@@ -14,13 +14,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activities.MainActivity" />
-
-        <activity
-            android:name=".activities.SignInActivity"
-            android:theme="@style/AppTheme" />
-
-        <activity
             android:name=".activities.SplashActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
@@ -28,6 +21,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-    </application>
+        <activity android:name=".activities.MainActivity" />
+        <activity
+            android:name=".activities.SignInActivity"
+            android:theme="@style/AppTheme" />
 
+        <service
+            android:name=".services.VideosUpdateService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
+            </intent-filter>
+        </service>
+    </application>
 </manifest>
