@@ -1,11 +1,14 @@
 package io.github.louistsaitszho.lineage.services
 
+import android.os.Environment
 import com.firebase.jobdispatcher.JobParameters
 import com.firebase.jobdispatcher.JobService
+import io.github.louistsaitszho.lineage.SystemConfig
 import io.github.louistsaitszho.lineage.model.Cancelable
 import io.github.louistsaitszho.lineage.model.DataCenterImpl
 import io.github.louistsaitszho.lineage.model.DataListener
 import io.github.louistsaitszho.lineage.model.Video
+import java.io.File
 
 /**
  * Check if there is any video that needs to be download
@@ -29,11 +32,25 @@ class VideosUpdateService: JobService() {
                                 //todo
 
                                 //3. get list of videos on device right now on this module
+                                val downloadFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+                                val lineageFolder = File(downloadFolder, "${SystemConfig.downloadFolderName}/")
+                                val moduleFolder = File(lineageFolder, "$it/")
+                                val files = moduleFolder.list()
 
                                 //4. compare and come up with a list of videos that needs to be download
 
-                                //5. ask DownloadManager to download the content accordingly
 
+                                //5. ask DownloadManager to download the content accordingly
+//                                val downloadManager = getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+//                                downloadManager.enqueue(
+//                                        DownloadManager.Request(null)
+//                                                .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI)   //todo check with garima
+//                                                .setAllowedOverRoaming(false)
+//                                                .setTitle("Downloading something (Hard code)")
+//                                                .setDescription("Insert title of video here")
+//                                                .setVisibleInDownloadsUi(true)
+//                                                .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
+//                                )
                             }
 
                             override fun onFailure(error: Throwable) {

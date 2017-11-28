@@ -1,6 +1,6 @@
 package io.github.louistsaitszho.lineage.model
 
-import io.github.louistsaitszho.lineage.ServerConfig
+import io.github.louistsaitszho.lineage.SystemConfig
 import io.github.louistsaitszho.lineage.attributes.VideoAttribute
 import io.github.louistsaitszho.lineage.model.attributes.ModuleAttribute
 import io.github.louistsaitszho.lineage.model.poko.JsonApiResponse
@@ -23,7 +23,7 @@ class LineageApiWrapperImpl : LineageApiWrapper {
      */
     init {
         val retrofit = Retrofit.Builder()
-                .baseUrl(ServerConfig.apiHost)
+                .baseUrl(SystemConfig.apiHost)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
         apiClient = retrofit.create(LineageApiInterface::class.java)
