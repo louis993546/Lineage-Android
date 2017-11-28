@@ -1,22 +1,14 @@
 package io.github.louistsaitszho.lineage.activities
 
-import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
-import android.os.Environment
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
 import io.github.louistsaitszho.lineage.R
-import io.github.louistsaitszho.lineage.SystemConfig
 import io.github.louistsaitszho.lineage.model.DataCenterImpl
 import io.github.louistsaitszho.lineage.model.DataListener
 import io.github.louistsaitszho.lineage.model.School
 import kotlinx.android.synthetic.main.activity_sign_in.*
-import timber.log.Timber
-import java.io.File
 
 class SignInActivity : AppCompatActivity() {
 
@@ -24,7 +16,7 @@ class SignInActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_in)
 
-        experiments()
+//        experiments()
 
         fab.setOnClickListener { _ ->
             //todo put some spinner wheel or something
@@ -43,50 +35,52 @@ class SignInActivity : AppCompatActivity() {
             })
         }
     }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        when (requestCode) {
-            123 -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    createFoldersAndStuff()
-                }
-            }
-        }
-    }
-
-    private fun experiments() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                Timber.d("Need to show something to let user know why this permission is needed")
-                Toast.makeText(this, "Need to show something to let user know why this permission is needed", Toast.LENGTH_LONG).show()
-            } else {
-                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 123)
-            }
-        } else {
-            createFoldersAndStuff()
-        }
-    }
-
-    private fun createFoldersAndStuff() {
-        val downloadFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-        Timber.d("Download folder path = '%s'", downloadFolder.absolutePath)
-        val lineageFolder = File(downloadFolder, "${SystemConfig.downloadFolderName}/")
-        Timber.d("Lineage folder path = '%s'", lineageFolder.absolutePath)
-        if (!lineageFolder.exists() || !lineageFolder.isDirectory) {
-            Timber.d("Lineage folder does not exist, making it now")
-            val success = lineageFolder.mkdirs()
-            if (!success) {
-                Timber.d("Create lineage folder failed!")
-            }
-        }
-        val files = lineageFolder.list()
-        if (files == null || files.isEmpty()) {
-            Timber.d("Lineage folder is null/empty")
-        } else {
-            Timber.d("here's the list of files: '%s'", files.contentDeepToString())
-        }
-        //        val moduleFolder = File(lineageFolder, "$it/")
-//        val files = moduleFolder.list()
-    }
+//
+//    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+//        when (requestCode) {
+//            123 -> {
+//                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                    createFoldersAndStuff()
+//                } else {
+//                    //TODO let user know
+//                }
+//            }
+//        }
+//    }
+//
+//    private fun experiments() {
+//        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+//            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+//                Timber.d("Need to show something to let user know why this permission is needed")
+//                Toast.makeText(this, "Need to show something to let user know why this permission is needed", Toast.LENGTH_LONG).show()
+//            } else {
+//                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 123)
+//            }
+//        } else {
+//            createFoldersAndStuff()
+//        }
+//    }
+//
+//    private fun createFoldersAndStuff() {
+//        val downloadFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+//        Timber.d("Download folder path = '%s'", downloadFolder.absolutePath)
+//        val lineageFolder = File(downloadFolder, "${SystemConfig.downloadFolderName}/")
+//        Timber.d("Lineage folder path = '%s'", lineageFolder.absolutePath)
+//        if (!lineageFolder.exists() || !lineageFolder.isDirectory) {
+//            Timber.d("Lineage folder does not exist, making it now")
+//            val success = lineageFolder.mkdirs()
+//            if (!success) {
+//                Timber.d("Create lineage folder failed!")
+//            }
+//        }
+//        val files = lineageFolder.list()
+//        if (files == null || files.isEmpty()) {
+//            Timber.d("Lineage folder is null/empty")
+//        } else {
+//            Timber.d("here's the list of files: '%s'", files.contentDeepToString())
+//        }
+//        //        val moduleFolder = File(lineageFolder, "$it/")
+////        val files = moduleFolder.list()
+//    }
 
 }

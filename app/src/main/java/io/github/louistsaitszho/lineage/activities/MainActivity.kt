@@ -1,6 +1,11 @@
 package io.github.louistsaitszho.lineage.activities
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
@@ -17,6 +22,7 @@ import timber.log.Timber
  */
 class MainActivity : AppCompatActivity() {
     val dataCenter = DataCenterImpl(this)
+    private val requestCodeWriteExternalStorage = 123
 
     //This is the way to declare Static final in Kotlin
     companion object {
@@ -67,6 +73,8 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
+        makeSureWriteExternalStorageIsAvailable()
+
         dataCenter.getSchoolCodeLocally(object: DataListener<String> {
             override fun onSuccess(source: Int, result: String?) {
                 //TODO inflate menu accordingly
@@ -98,5 +106,56 @@ class MainActivity : AppCompatActivity() {
                 Timber.d(Throwable("Probably because no school code", error))
             }
         })
+    }
+
+    /**
+     *
+     */
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            requestCodeWriteExternalStorage -> {
+                if (!grantResults.isNotEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    showRationaleForWriteExternalStorage()
+                }
+            }
+        }
+    }
+
+    /**
+     * Make sure the WRITE_EXTERNAL_STORAGE is granted, so that I can download stuff in background
+     * overnight
+     */
+    private fun makeSureWriteExternalStorageIsAvailable() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                showRationaleForWriteExternalStorage()
+            } else {
+                askForExternalStoragePermission()
+            }
+        }
+    }
+
+    private fun askForExternalStoragePermission() {
+        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), requestCodeWriteExternalStorage)
+    }
+
+    /**
+     * If the system things that we need to explain to user why this permission is needed, this will
+     * create a dialog to explain why
+     */
+    private fun showRationaleForWriteExternalStorage() {
+        AlertDialog.Builder(this)
+                .setTitle("We need the write to external storage permission")
+                .setMessage("Without this permission, this app will not be able to download contents overnight!")
+                .setPositiveButton("Try again") { dialog, which ->
+                    dialog.dismiss()
+                    askForExternalStoragePermission()   //i.e. try again
+                }
+                .setNegativeButton("Cancel") { dialog, which ->
+                    dialog.dismiss()
+//                    TODO("mark it to somewhere")
+                }
+                .show()
     }
 }
