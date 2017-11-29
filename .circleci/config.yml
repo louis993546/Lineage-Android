@@ -9,22 +9,19 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-        key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
       - run:
-        name: Accept Build Tool Licenses
-        command: if [ ! -d "/usr/local/android-sdk-linux/build-tools/26.0.3" ]; then echo y | android update sdk --no-ui --all --filter "build-tools-26.0.3"; fi
-      - run:
-        name: Download Dependencies
-        command: ./gradlew androidDependencies
+          name: Download Dependencies
+          command: ./gradlew androidDependencies
       - save_cache:
           paths:
             - ~/.gradle
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
       - run:
-        name: Run lint & test
-        command: ./gradlew lint test
+          name: Run Tests
+          command: ./gradlew lint test
       - store_artifacts:
-        path: app/build/reports
-        destination: reports
+          path: app/build/reports
+          destination: reports
       - store_test_results:
-        path: app/build/test-results
+          path: apKp/build/test-results
