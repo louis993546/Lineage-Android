@@ -21,18 +21,24 @@ class SignInActivity : AppCompatActivity() {
         setContentView(R.layout.activity_sign_in)
 
         fab.setOnClickListener { _ ->
+            fab_progress.show()
             //todo put some spinner wheel or something
             val schoolCode = edit_text_school_code.text.toString()
             val dataCenter = DataCenterImpl(this)
             dataCenter.signIn(schoolCode, object : DataListener<School> {
                 override fun onSuccess(source: Int, result: School?) {
-                    val intent = Intent(this@SignInActivity, MainActivity::class.java)
-                    startActivity(intent)
+                    fab_progress.beginFinalAnimation()
+                    fab_progress.attachListener {
+                        val intent = Intent(this@SignInActivity, MainActivity::class.java)
+                        startActivity(intent)
+                    }
                 }
 
                 override fun onFailure(error: Throwable) {
-                    //todo figure out how to display error message
-                    Toast.makeText(this@SignInActivity, "Failed", Toast.LENGTH_LONG).show()
+                    //todo hard code string
+                    Toast.makeText(this@SignInActivity, "Sign in failed. Please try again", Toast.LENGTH_LONG).show()
+                    text_input_layout_school_code.error = "Incorrect school code!"
+                    fab_progress.hide()
                 }
             })
         }

@@ -100,6 +100,9 @@ dependencies {
     //circular image view (why google why)
     implementation 'de.hdodenhof:circleimageview:2.2.0'
 
-    //firebase job dispatcher
+    //firebase job dispatcher -> schedule download
     implementation 'com.firebase:firebase-jobdispatcher:0.8.4'
+
+    //FABProgressCircle -> indicate loading
+    implementation 'com.github.jorgecastilloprz:fabprogresscircle:1.01@aar'
 }
