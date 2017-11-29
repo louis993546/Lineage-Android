@@ -73,7 +73,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             Glide.with(holder.unitImage.getContext())
                     .load(listUnit.getThumbnailUrl())
                     .into(holder.unitImage);
-
+            //TODO check out ThumbnailUtils.createVideoThumbnail
         }
     }
 
