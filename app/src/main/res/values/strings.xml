@@ -8,4 +8,6 @@
     <string name="title_activity_sign_in">SignInActivity</string>
     <string name="hint_school_code">School code</string>
     <string name="button_no_access_code">Don\'t have access code?</string>
+    <string name="content_description_open_drawer">Open drawer</string>
+    <string name="content_description_close_drawer">Close drawer</string>
 </resources>
