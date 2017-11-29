@@ -6,4 +6,6 @@
     <string name="medium">Medium</string>
     <string name="large">Large</string>
     <string name="title_activity_sign_in">SignInActivity</string>
+    <string name="hint_school_code">School code</string>
+    <string name="button_no_access_code">Don\'t have access code?</string>
 </resources>

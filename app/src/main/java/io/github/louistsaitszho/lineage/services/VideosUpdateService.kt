@@ -8,6 +8,7 @@ import io.github.louistsaitszho.lineage.model.Cancelable
 import io.github.louistsaitszho.lineage.model.DataCenterImpl
 import io.github.louistsaitszho.lineage.model.DataListener
 import io.github.louistsaitszho.lineage.model.Video
+import timber.log.Timber
 import java.io.File
 
 /**
@@ -33,9 +34,26 @@ class VideosUpdateService: JobService() {
 
                                 //3. get list of videos on device right now on this module
                                 val downloadFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+                                Timber.d("Download folder path = '%s'", downloadFolder.absolutePath)
                                 val lineageFolder = File(downloadFolder, "${SystemConfig.downloadFolderName}/")
+                                Timber.d("Lineage folder path = '%s'", lineageFolder.absolutePath)
+                                if (!lineageFolder.exists() || !lineageFolder.isDirectory) {
+                                    Timber.d("Lineage folder does not exist, making it now")
+                                    val success = lineageFolder.mkdirs()
+                                    if (!success) {
+                                        Timber.d("Create lineage folder failed!")
+                                    }
+                                }
+                                val moduleFolders = lineageFolder.list()
+                                if (moduleFolders == null || moduleFolders.isEmpty()) {
+                                    Timber.d("Lineage folder is null/has no modules")
+                                } else {
+                                    Timber.d("here's the list of folders: '%s'", moduleFolders.contentDeepToString())
+                                }
+
                                 val moduleFolder = File(lineageFolder, "$it/")
                                 val files = moduleFolder.list()
+                                Timber.d("here's the list of files in module '%s': '%s'", it, files.contentDeepToString())
 
                                 //4. compare and come up with a list of videos that needs to be download
 
