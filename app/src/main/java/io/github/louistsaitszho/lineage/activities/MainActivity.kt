@@ -10,7 +10,6 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.Toast
 import io.github.louistsaitszho.lineage.R
 import io.github.louistsaitszho.lineage.model.DataCenterImpl

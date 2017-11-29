@@ -22,7 +22,6 @@ class SignInActivity : AppCompatActivity() {
 
         fab.setOnClickListener { _ ->
             fab_progress.show()
-            //todo put some spinner wheel or something
             val schoolCode = edit_text_school_code.text.toString()
             val dataCenter = DataCenterImpl(this)
             dataCenter.signIn(schoolCode, object : DataListener<School> {

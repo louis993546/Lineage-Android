@@ -11,6 +11,7 @@ import android.widget.Toast
 import io.github.louistsaitszho.lineage.OnItemClickListener
 import io.github.louistsaitszho.lineage.R
 import io.github.louistsaitszho.lineage.RecyclerViewAdapter
+import io.github.louistsaitszho.lineage.VerticalDividerItemDecoration
 import io.github.louistsaitszho.lineage.activities.MainActivity
 import io.github.louistsaitszho.lineage.model.*
 import kotlinx.android.synthetic.main.fragment_videos.*
@@ -47,6 +48,7 @@ class VideosFragment : Fragment(), OnItemClickListener<Video> {
                     videosAdapter = RecyclerViewAdapter(result, MainActivity.NO_THUMBNAIL)
                     recycler_view.adapter = videosAdapter
                     recycler_view.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                    recycler_view.addItemDecoration(VerticalDividerItemDecoration(context, R.dimen.margin_between_videos))
                 } else {
 //                    TODO show something
                     Toast.makeText(this@VideosFragment.context, "No videos yet!", Toast.LENGTH_LONG).show()
