@@ -1,5 +1,6 @@
 package io.github.louistsaitszho.lineage.model
 
+import android.net.Uri
 import io.github.louistsaitszho.lineage.attributes.VideoAttribute
 import io.github.louistsaitszho.lineage.model.poko.Data
 
@@ -13,4 +14,9 @@ data class Video(val id : String, val url : String, val thumbnailUrl : String?, 
      * Takes what API response and gives you a simple Video object
      */
     constructor(apiResponse: Data<VideoAttribute>) : this(apiResponse.id, apiResponse.attributes.link, apiResponse.attributes.thumbnailUrl, apiResponse.attributes.title)
+
+    /**
+     * Turns url from String to Uri
+     */
+    fun getVideoUri(): Uri = Uri.parse(url)
 }

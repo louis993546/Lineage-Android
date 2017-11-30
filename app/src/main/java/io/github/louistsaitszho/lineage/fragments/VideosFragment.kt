@@ -1,11 +1,11 @@
 package io.github.louistsaitszho.lineage.fragments
 
-import android.app.DownloadManager
+import android.Manifest
 import android.content.Context
-import android.net.Uri
+import android.content.pm.PackageManager
 import android.os.Bundle
-import android.os.Environment
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -20,12 +20,13 @@ import io.github.louistsaitszho.lineage.model.*
 import kotlinx.android.synthetic.main.fragment_videos.*
 import timber.log.Timber
 
+
 /**
  * This fragment display a list of videos
  * Created by louistsai on 31.08.17.
  */
 class VideosFragment : Fragment(), OnItemClickListener<Video> {
-    var dataCenter: DataCenter? = null
+    private var dataCenter: DataCenter? = null
     private var getVideoCancelable : Cancelable? = null
     private var videosAdapter : RecyclerViewAdapter? = null
 
@@ -53,7 +54,7 @@ class VideosFragment : Fragment(), OnItemClickListener<Video> {
                     recycler_view.addItemDecoration(VerticalDividerItemDecoration(context, R.dimen.margin_between_videos))
                 } else {
 //                    TODO show something
-                    Toast.makeText(this@VideosFragment.context, "No videos yet!", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@VideosFragment.context, R.string.error_no_videos_here, Toast.LENGTH_LONG).show()
                 }
             }
 
@@ -64,30 +65,30 @@ class VideosFragment : Fragment(), OnItemClickListener<Video> {
         })
     }
 
+    /**
+     * If there is any residual network activities, kill them!
+     */
     override fun onDestroy() {
         super.onDestroy()
         getVideoCancelable?.cancelNow()
+        dataCenter?.close()
     }
 
     /**
-     * When a video is click -> TODO the following 2 tasks
-     * 1) Open it if available
-     * 2) Ask user to download it if not available
+     * When a video is click
+     * TODO 1) Open it if available
+     * TODO 2) Download it if not available
      */
     override fun onSelect(item: Video) {
         Timber.d("a video selected")
-        Toast.makeText(this.context, item.toString(), Toast.LENGTH_LONG).show()
+        val videoDownloader = VideoDownloader(item)
 
-        //todo wrote logic on check if video is available or needs download, right now just download everything
-
-        val downloadManager = activity.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-        downloadManager.enqueue(
-                DownloadManager.Request(Uri.parse(item.url))
-                        .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "/Lineage/test.mp4")
-                        .setTitle("Downloading or sth")
-                        .setDescription(item.title)
-                        .setVisibleInDownloadsUi(true)
-                        .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
-        )
+        val permissionCheck = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        //todo do i really need shouldShowRequestPermissionRationale here???
+        if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+            videoDownloader.downloadVideoNow(context)
+        } else {
+            //todo ask for permission (again)
+        }
     }
 }
