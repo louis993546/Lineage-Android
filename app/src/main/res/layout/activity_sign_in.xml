@@ -60,7 +60,7 @@
             android:layout_gravity="center"
             app:elevation="6dp"
             app:pressedTranslationZ="12dp"
-            app:srcCompat="@drawable/ic_keyboard_arrow_right_black_24dp" />
+            app:srcCompat="@drawable/ic_keyboard_arrow_right_light_24dp" />
 
         <ProgressBar
             android:layout_width="wrap_content"

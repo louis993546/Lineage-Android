@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:padding="16dp"
-    android:background="@color/colorAccent">
+    android:background="@color/secondaryColor">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/circle_image_view_avatar"
@@ -16,7 +16,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginBottom="16dp"
-        tools:src="@color/colorPrimaryDark"/>
+        tools:src="@color/secondaryDarkColor"/>
 
     <TextView
         android:id="@+id/text_view_school_name"

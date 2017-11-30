@@ -29,6 +29,7 @@ class VideoDownloader(val video: Video) {
     @RequiresPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     fun downloadVideoNow(context: Context) {
         val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+        //todo try catch IAE: if uri is not http/https
         downloadManager.enqueue(
                 DownloadManager.Request(video.getVideoUri())
                         .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, generateVideoFilePath())

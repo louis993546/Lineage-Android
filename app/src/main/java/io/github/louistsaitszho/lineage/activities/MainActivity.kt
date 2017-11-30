@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity() {
         drawer_layout.addDrawerListener(drawerToggle)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeButtonEnabled(true)
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_menu_light_24dp)
 
         makeSureWriteExternalStorageIsAvailable()
 
