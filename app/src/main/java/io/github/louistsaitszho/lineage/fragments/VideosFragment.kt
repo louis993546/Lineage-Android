@@ -20,7 +20,6 @@ import io.github.louistsaitszho.lineage.model.*
 import kotlinx.android.synthetic.main.fragment_videos.*
 import timber.log.Timber
 
-
 /**
  * This fragment display a list of videos
  * Created by louistsai on 31.08.17.

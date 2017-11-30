@@ -1,4 +1,5 @@
 <resources>
     <dimen name="fab_margin">32dp</dimen>
     <dimen name="margin_between_videos">8dp</dimen>
+    <dimen name="standard_side_margin">16dp</dimen>
 </resources>

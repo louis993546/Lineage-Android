@@ -21,10 +21,7 @@ class VideoDownloader(val video: Video) {
      * 2) Each module is a folder (folder name = module id)
      * 3) file name = video id + .mp4 (TODO this is straight up a bad idea but that's all i can do for now)
      */
-    private fun generateVideoFilePath(): String {
-        val moduleId = "todo"
-        return "/${SystemConfig.downloadFolderName}/$moduleId/${video.id}.mp4"
-    }
+    private fun generateVideoFilePath() = "/${SystemConfig.downloadFolderName}/${video.moduleId}/${video.id}.mp4"
 
     /**
      * method to ask DownloadManager to download video
