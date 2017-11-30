@@ -10,4 +10,9 @@
     <string name="button_no_access_code">Don\'t have access code?</string>
     <string name="content_description_open_drawer">Open drawer</string>
     <string name="content_description_close_drawer">Close drawer</string>
+    <string name="action_refresh">Refresh</string>
+    <string name="title_rationale_ext_storage">We need the write to external storage permission</string>
+    <string name="message_rationale_ext_storage">Without this permission, this app will not be able to download contents overnight!</string>
+    <string name="button_try_again">Try again</string>
+    <string name="button_cancel">Cancel</string>
 </resources>

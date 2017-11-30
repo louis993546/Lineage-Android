@@ -1,6 +1,7 @@
 package io.github.louistsaitszho.lineage;
 
 import android.support.annotation.LayoutRes;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,27 +18,22 @@ import io.github.louistsaitszho.lineage.model.Video;
 
 /**
  * todo rename to sth like video adapter (we will have other adapter)
+ * todo check this out: https://stackoverflow.com/a/26196831/2384934
  * Created by lsteamer on 15/09/2017.
  */
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
     //List that holds the information for all the Contents
     private List<Video> listContents;
-
-    /*
-    FOLLOWING IS A "DUMMY" variable that 'states' that there is no THUMBNAIL ATM
-    NO_THUMBNAIL
-    MEDIUM
-    LARGE
-     */
     private String thumbnail;
+    private OnItemClickListener<Video> callback;
 
     //Construction of the adapter. provides the Contents and the context
-    public RecyclerViewAdapter(List<Video> listContents, String thumbnail) {
+    public RecyclerViewAdapter(List<Video> listContents, String thumbnail, OnItemClickListener<Video> callback) {
         this.listContents = listContents;
         this.thumbnail = thumbnail;
+        this.callback = callback;
     }
-
 
     //Method creates (inflates) the View Holder
     @Override
@@ -55,15 +51,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 layoutRes = R.layout.view_holder_video_no_thumbnail;
                 break;
         }
-        return new ViewHolder(LayoutInflater.from(parent.getContext())
-                .inflate(layoutRes, parent, false));
+        View view = LayoutInflater.from(parent.getContext()).inflate(layoutRes, parent, false);
+        return new ViewHolder(view);
     }
-
 
     //Method gives the ViewHolder it's contents
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        Video listUnit = listContents.get(position);
+    public void onBindViewHolder(final ViewHolder holder, int position) {
+        final Video listUnit = listContents.get(position);
         holder.textUnitDescription.setText(listUnit.getTitle());
 
         //Since we don't have Thumbnail, these variables are not used
@@ -75,6 +70,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     .into(holder.unitImage);
             //TODO check out ThumbnailUtils.createVideoThumbnail
         }
+
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callback.onSelect(listUnit);
+            }
+        });
     }
 
     @Override
@@ -88,6 +90,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         private TextView textUnitDescription;
         private ImageView unitImage;
         private TextView urlUnitVideo;
+        private CardView cardView;
 
         //Constructor
         ViewHolder(View itemView) {
@@ -106,6 +109,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 default:
                     //Here we're filling with NO_THUMBNAIL
                     textUnitDescription = itemView.findViewById(R.id.textViewUnitDescriptionNoThumbnail);
+                    cardView = itemView.findViewById(R.id.card_view);
                     break;
             }
         }

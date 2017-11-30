@@ -1,7 +1,10 @@
 package io.github.louistsaitszho.lineage.fragments
 
+import android.app.DownloadManager
 import android.content.Context
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
@@ -22,7 +25,6 @@ import timber.log.Timber
  * Created by louistsai on 31.08.17.
  */
 class VideosFragment : Fragment(), OnItemClickListener<Video> {
-//    private val dataCenter : DataCenter = DataCenterImpl(this.context)
     var dataCenter: DataCenter? = null
     private var getVideoCancelable : Cancelable? = null
     private var videosAdapter : RecyclerViewAdapter? = null
@@ -45,7 +47,7 @@ class VideosFragment : Fragment(), OnItemClickListener<Video> {
                     listIsEmpty = false
                 }
                 if (listIsEmpty.not()) {
-                    videosAdapter = RecyclerViewAdapter(result, MainActivity.NO_THUMBNAIL)
+                    videosAdapter = RecyclerViewAdapter(result, MainActivity.NO_THUMBNAIL, this@VideosFragment)
                     recycler_view.adapter = videosAdapter
                     recycler_view.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                     recycler_view.addItemDecoration(VerticalDividerItemDecoration(context, R.dimen.margin_between_videos))
@@ -75,5 +77,17 @@ class VideosFragment : Fragment(), OnItemClickListener<Video> {
     override fun onSelect(item: Video) {
         Timber.d("a video selected")
         Toast.makeText(this.context, item.toString(), Toast.LENGTH_LONG).show()
+
+        //todo wrote logic on check if video is available or needs download, right now just download everything
+
+        val downloadManager = activity.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+        downloadManager.enqueue(
+                DownloadManager.Request(Uri.parse(item.url))
+                        .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "/Lineage/test.mp4")
+                        .setTitle("Downloading or sth")
+                        .setDescription(item.title)
+                        .setVisibleInDownloadsUi(true)
+                        .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
+        )
     }
 }

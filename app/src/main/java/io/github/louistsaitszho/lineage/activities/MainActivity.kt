@@ -19,7 +19,10 @@ import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
 
 /**
- * TODO write something
+ * This activity contains
+ * - Drawer
+ * - Toolbar
+ * - VideoFragment
  */
 class MainActivity : AppCompatActivity() {
     val dataCenter = DataCenterImpl(this)
@@ -33,7 +36,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     //Layout option prone to change
-    private var layoutOption = NO_THUMBNAIL
+//    private var layoutOption = NO_THUMBNAIL
 
     //This creates a menu that displays 'Settings' on the top right corner.
     //Such Menu can be modified in the Folder app/res/menu/main_menu.xml
@@ -46,23 +49,28 @@ class MainActivity : AppCompatActivity() {
     //This takes the Option from the Layout and sizes the app accordingly
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         super.onOptionsItemSelected(item)
-        //todo instead of calling runadapter, call the fragment
-        when (item.itemId) {
-            R.id.no_thubnail -> {
-                layoutOption = NO_THUMBNAIL
-                return true
+        return when (item.itemId) {
+            R.id.action_refresh -> {
+                //todo call fragment to call api and
+                true
+            }
+            R.id.no_thumbnail -> {
+//                layoutOption = NO_THUMBNAIL
+                //todo call fragment to call adapter to change viewholder type
+                true
             }
             R.id.medium -> {
-                layoutOption = MEDIUM
-                return true
+//                layoutOption = MEDIUM
+                //todo call fragment to call adapter to change viewholder type
+                true
             }
             R.id.large -> {
-                layoutOption = LARGE
-                return true
+//                layoutOption = LARGE
+                //todo call fragment to call adapter to change viewholder type
+                true
             }
-            else -> return false
+            else -> false
         }
-
     }
 
     /**
@@ -153,13 +161,13 @@ class MainActivity : AppCompatActivity() {
      */
     private fun showRationaleForWriteExternalStorage() {
         AlertDialog.Builder(this)
-                .setTitle("We need the write to external storage permission")
-                .setMessage("Without this permission, this app will not be able to download contents overnight!")
-                .setPositiveButton("Try again") { dialog, which ->
+                .setTitle(getString(R.string.title_rationale_ext_storage))
+                .setMessage(getString(R.string.message_rationale_ext_storage))
+                .setPositiveButton(getString(R.string.button_try_again)) { dialog, _ ->
                     dialog.dismiss()
                     askForExternalStoragePermission()   //i.e. try again
                 }
-                .setNegativeButton("Cancel") { dialog, which ->
+                .setNegativeButton(getString(R.string.button_cancel)) { dialog, _ ->
                     dialog.dismiss()
 //                    TODO("mark it to somewhere")
                 }

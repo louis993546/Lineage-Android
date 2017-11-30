@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:title="@string/no_thumbnail"
-        android:id="@+id/no_thubnail"></item>
-    <item android:title="@string/medium"
-        android:id="@+id/medium"></item>
-    <item android:title="@string/large"
-        android:id="@+id/large"></item>
+    <item
+        android:id="@+id/action_refresh"
+        android:orderInCategory="50"
+        android:title="@string/action_refresh"
+        android:icon="@drawable/ic_refresh_black_24dp"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/no_thumbnail"
+        android:orderInCategory="100"
+        android:title="@string/no_thumbnail"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/medium"
+        android:orderInCategory="200"
+        android:title="@string/medium"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/large"
+        android:orderInCategory="300"
+        android:title="@string/large"
+        app:showAsAction="never"/>
 
 </menu>
