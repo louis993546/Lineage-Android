@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
+<android.support.v7.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_view"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -27,7 +27,20 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"/>
+            android:layout_centerVertical="true"
+            android:tint="@color/primaryTextColor"/>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@id/buttonInfoNoThumbnail"
+            android:layout_toLeftOf="@id/buttonInfoNoThumbnail"
+            android:layout_centerVertical="true"
+            app:srcCompat="@drawable/ic_file_download_black_24dp"
+            android:background="@android:color/transparent"
+            android:tint="@color/primaryTextColor"
+            android:visibility="gone"
+            tools:visibility="visible"/>
 
     </RelativeLayout>
 
