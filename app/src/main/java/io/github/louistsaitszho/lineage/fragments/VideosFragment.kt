@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Environment
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
@@ -19,12 +20,14 @@ import io.github.louistsaitszho.lineage.activities.MainActivity
 import io.github.louistsaitszho.lineage.model.*
 import kotlinx.android.synthetic.main.fragment_videos.*
 import timber.log.Timber
+import java.io.File
 
 /**
  * This fragment display a list of videos
  * Created by louistsai on 31.08.17.
  */
-class VideosFragment : Fragment(), OnItemClickListener<Video> {
+class VideosFragment : Fragment() {
+
     private var dataCenter: DataCenter? = null
     private var getVideoCancelable : Cancelable? = null
     private var videosAdapter : RecyclerViewAdapter? = null
@@ -40,14 +43,30 @@ class VideosFragment : Fragment(), OnItemClickListener<Video> {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        getVideoCancelable = dataCenter?.getVideos("1", object: DataListener<List<Video>> {
+        val moduleId = "1"  //TODO hard code module id
+        getVideoCancelable = dataCenter?.getVideos(moduleId, object: DataListener<List<Video>> {
             override fun onSuccess(source: Int, result: List<Video>?) {
                 var listIsEmpty = true
                 if (result != null && result.isEmpty().not()) {
                     listIsEmpty = false
                 }
                 if (listIsEmpty.not()) {
-                    videosAdapter = RecyclerViewAdapter(result, MainActivity.NO_THUMBNAIL, this@VideosFragment)
+                    videosAdapter = RecyclerViewAdapter(moduleId, MainActivity.NO_THUMBNAIL, result, object: OnItemClickListener<Video> {
+                        override fun onSelect(item: Video) {
+                            //TODO download video if not available; else open it
+                            val videoFile = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), VideoDownloader(item).generateVideoFilePath())
+                            if (videoFile.exists() && videoFile.isFile) {
+                                //video exist, don't download it
+                                Toast.makeText(context, "Video already downloaded", Toast.LENGTH_LONG).show()
+                            } else {
+                                downloadVideo(item)
+                            }
+                        }
+                    }, object: OnItemClickListener<Video> {
+                        override fun onSelect(item: Video) {
+                            downloadVideo(item)
+                        }
+                    })
                     recycler_view.adapter = videosAdapter
                     recycler_view.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                     recycler_view.addItemDecoration(VerticalDividerItemDecoration(context, R.dimen.margin_between_videos))
@@ -73,14 +92,12 @@ class VideosFragment : Fragment(), OnItemClickListener<Video> {
         dataCenter?.close()
     }
 
-    /**
-     * When a video is click
-     * TODO 1) Open it if available
-     * TODO 2) Download it if not available
-     */
-    override fun onSelect(item: Video) {
+    private fun downloadVideo(video: Video) {
+        //TODO also include broadcast listener stuff here
+
+
         Timber.d("a video selected")
-        val videoDownloader = VideoDownloader(item)
+        val videoDownloader = VideoDownloader(video)
 
         val permissionCheck = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)
         //todo do i really need shouldShowRequestPermissionRationale here???

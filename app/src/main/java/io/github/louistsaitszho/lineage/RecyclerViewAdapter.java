@@ -1,5 +1,6 @@
 package io.github.louistsaitszho.lineage;
 
+import android.os.Environment;
 import android.support.annotation.LayoutRes;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.io.File;
 import java.util.List;
 
 import io.github.louistsaitszho.lineage.activities.MainActivity;
@@ -26,13 +28,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     //List that holds the information for all the Contents
     private List<Video> listContents;
     private String thumbnail;
-    private OnItemClickListener<Video> callback;
+    private OnItemClickListener<Video> cardClickListener;
+    private OnItemClickListener<Video> downloadClickListener;
+    private File moduleFolder;
 
-    //Construction of the adapter. provides the Contents and the context
-    public RecyclerViewAdapter(List<Video> listContents, String thumbnail, OnItemClickListener<Video> callback) {
-        this.listContents = listContents;
+
+    public RecyclerViewAdapter(String moduleId, String thumbnail, List<Video> videos, OnItemClickListener<Video> cardClickListener, OnItemClickListener<Video> downloadClickListener) {
+        this.listContents = videos;
         this.thumbnail = thumbnail;
-        this.callback = callback;
+        this.cardClickListener = cardClickListener;
+        this.downloadClickListener = downloadClickListener;
+        this.moduleFolder = new File(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), SystemConfig.downloadFolderName), moduleId);
     }
 
     //Method creates (inflates) the View Holder
@@ -74,7 +80,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.onSelect(listUnit);
+                cardClickListener.onSelect(listUnit);
             }
         });
     }
