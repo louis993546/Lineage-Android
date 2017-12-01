@@ -12,6 +12,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import io.github.louistsaitszho.lineage.R
+import io.github.louistsaitszho.lineage.fragments.VideosFragment
 import io.github.louistsaitszho.lineage.model.DataCenterImpl
 import io.github.louistsaitszho.lineage.model.DataListener
 import io.github.louistsaitszho.lineage.model.Module
@@ -49,9 +50,10 @@ class MainActivity : AppCompatActivity() {
     //This takes the Option from the Layout and sizes the app accordingly
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         super.onOptionsItemSelected(item)
+        val videoFragment = supportFragmentManager.findFragmentById(R.id.fragment_videos) as VideosFragment
         return when (item.itemId) {
             R.id.action_refresh -> {
-                //todo call fragment to call api and
+                videoFragment.fetchVideos(videoFragment.currentModuleId)
                 true
             }
             R.id.no_thumbnail -> {

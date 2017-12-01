@@ -32,8 +32,9 @@ import java.io.File
 class VideosFragment : Fragment() {
 
     private var dataCenter: DataCenter? = null
-    private var getVideoCancelable : Cancelable? = null
-    private var videosAdapter : RecyclerViewAdapter? = null
+    private var getVideoCancelable: Cancelable? = null
+    private var videosAdapter: RecyclerViewAdapter? = null
+    public var currentModuleId: String? = null      //todo this should be lateinit?
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -46,14 +47,29 @@ class VideosFragment : Fragment() {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val moduleId = "1"  //TODO hard code module id
+        fetchVideos("1")    //TODO hard code module id
+        swipe_refresh_layout.setOnRefreshListener {
+            fetchVideos(currentModuleId)
+        }
+        recycler_view.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        recycler_view.addItemDecoration(VerticalDividerItemDecoration(context, R.dimen.margin_between_videos))
+    }
+
+    /**
+     * TODO write something
+     */
+    fun fetchVideos(moduleId: String?) {    //todo once currentmoduleid becomes non nullable lateinit, change it back to non-immutable
+        currentModuleId = moduleId
+
         getVideoCancelable = dataCenter?.getVideos(moduleId, object: DataListener<List<Video>> {
             override fun onSuccess(source: Int, result: List<Video>?) {
+                swipe_refresh_layout.isRefreshing = false
                 var listIsEmpty = true
                 if (result != null && result.isEmpty().not()) {
                     listIsEmpty = false
                 }
                 if (listIsEmpty.not()) {
+                    //TODO if user is refreshing, notify changes instead
                     videosAdapter = RecyclerViewAdapter(moduleId, MainActivity.NO_THUMBNAIL, result, object: OnItemClickListener<Video> {
                         override fun onSelect(item: Video) {
                             //TODO the following logic exist in 2 places: figure out how to reuse it
@@ -74,15 +90,15 @@ class VideosFragment : Fragment() {
                         }
                     })
                     recycler_view.adapter = videosAdapter
-                    recycler_view.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-                    recycler_view.addItemDecoration(VerticalDividerItemDecoration(context, R.dimen.margin_between_videos))
                 } else {
 //                    TODO show something
                     Toast.makeText(this@VideosFragment.context, R.string.error_no_videos_here, Toast.LENGTH_LONG).show()
                 }
+                getVideoCancelable = null
             }
 
             override fun onFailure(error: Throwable) {
+                swipe_refresh_layout.isRefreshing = false
                 Timber.d("get videos failed")
                 Toast.makeText(this@VideosFragment.context, "Something's wrong when fetching videos", Toast.LENGTH_LONG).show()
             }
