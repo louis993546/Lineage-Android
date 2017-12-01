@@ -2,7 +2,9 @@ package io.github.louistsaitszho.lineage.fragments
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.support.v4.app.Fragment
@@ -21,6 +23,7 @@ import io.github.louistsaitszho.lineage.model.*
 import kotlinx.android.synthetic.main.fragment_videos.*
 import timber.log.Timber
 import java.io.File
+
 
 /**
  * This fragment display a list of videos
@@ -53,11 +56,14 @@ class VideosFragment : Fragment() {
                 if (listIsEmpty.not()) {
                     videosAdapter = RecyclerViewAdapter(moduleId, MainActivity.NO_THUMBNAIL, result, object: OnItemClickListener<Video> {
                         override fun onSelect(item: Video) {
-                            //TODO download video if not available; else open it
+                            //TODO the following logic exist in 2 places: figure out how to reuse it
                             val videoFile = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), VideoDownloader(item).generateVideoFilePath())
                             if (videoFile.exists() && videoFile.isFile) {
                                 //video exist, don't download it
-                                Toast.makeText(context, "Video already downloaded", Toast.LENGTH_LONG).show()
+                                val uri = Uri.parse(videoFile.absolutePath)
+                                val intent = Intent(Intent.ACTION_VIEW, uri)
+                                intent.setDataAndType(uri, "video/mp4") //TODO maybe just "video/*" ?
+                                startActivity(intent)
                             } else {
                                 downloadVideo(item)
                             }
