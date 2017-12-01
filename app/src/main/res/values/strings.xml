@@ -15,6 +15,8 @@
     <string name="message_rationale_ext_storage">Without this permission, this app will not be able to download contents overnight!</string>
     <string name="button_try_again">Try again</string>
     <string name="button_cancel">Cancel</string>
-    <string name="title_downloading_eclipses">Downloading...</string>
+    <string name="title_downloading_eclipses">Downloading…</string>
     <string name="error_no_videos_here">No videos yet!</string>
+    <string name="content_description_download_button">Download button</string>
+    <string name="content_description_overflow_button">Overflow button</string>
 </resources>

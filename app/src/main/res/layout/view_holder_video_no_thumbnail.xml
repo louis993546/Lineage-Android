@@ -28,7 +28,8 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:tint="@color/primaryTextColor"/>
+            android:tint="@color/primaryTextColor"
+            android:contentDescription="@string/content_description_overflow_button" />
 
         <ImageButton
             android:id="@+id/image_button_download"
@@ -37,6 +38,7 @@
             android:layout_toStartOf="@id/buttonInfoNoThumbnail"
             android:layout_toLeftOf="@id/buttonInfoNoThumbnail"
             android:layout_centerVertical="true"
+            android:contentDescription="@string/content_description_download_button"
             app:srcCompat="@drawable/ic_file_download_black_24dp"
             android:background="@android:color/transparent"
             android:tint="@color/primaryTextColor"
