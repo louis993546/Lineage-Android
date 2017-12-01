@@ -7,6 +7,7 @@ import android.os.Environment
 import android.support.annotation.RequiresPermission
 import io.github.louistsaitszho.lineage.R
 import io.github.louistsaitszho.lineage.SystemConfig
+import java.io.File
 
 /**
  * If you want to download a video this is the right place for you
@@ -22,6 +23,17 @@ class VideoDownloader(val video: Video) {
      * 3) file name = video id + .mp4 (TODO this is straight up a bad idea but that's all i can do for now)
      */
     fun generateVideoFilePath() = "/${SystemConfig.downloadFolderName}/${video.moduleId}/${video.id}.mp4"
+
+    /**
+     *
+     */
+    fun generateAbsoluteVideoLocalFilePath() =
+            File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), generateVideoFilePath())
+
+    fun isVideoAvailableLocally(): Boolean {
+        val videoFile = generateAbsoluteVideoLocalFilePath()
+        return videoFile.exists() && videoFile.isFile
+    }
 
     /**
      * method to ask DownloadManager to download video

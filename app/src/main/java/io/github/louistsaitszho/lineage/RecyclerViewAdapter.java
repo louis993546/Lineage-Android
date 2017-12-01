@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,6 +18,7 @@ import java.util.List;
 
 import io.github.louistsaitszho.lineage.activities.MainActivity;
 import io.github.louistsaitszho.lineage.model.Video;
+import io.github.louistsaitszho.lineage.model.VideoDownloader;
 
 /**
  * todo rename to sth like video adapter (we will have other adapter)
@@ -83,6 +85,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 cardClickListener.onSelect(listUnit);
             }
         });
+
+        if (new VideoDownloader(listUnit).isVideoAvailableLocally()) {
+            holder.downloadButton.setVisibility(View.GONE);
+        } else {
+            holder.downloadButton.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -97,6 +105,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         private ImageView unitImage;
         private TextView urlUnitVideo;
         private CardView cardView;
+        private ImageButton downloadButton;
 
         //Constructor
         ViewHolder(View itemView) {
@@ -116,6 +125,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     //Here we're filling with NO_THUMBNAIL
                     textUnitDescription = itemView.findViewById(R.id.textViewUnitDescriptionNoThumbnail);
                     cardView = itemView.findViewById(R.id.card_view);
+                    downloadButton = itemView.findViewById(R.id.image_button_download);
                     break;
             }
         }

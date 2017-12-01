@@ -73,10 +73,10 @@ class VideosFragment : Fragment() {
                     videosAdapter = RecyclerViewAdapter(moduleId, MainActivity.NO_THUMBNAIL, result, object: OnItemClickListener<Video> {
                         override fun onSelect(item: Video) {
                             //TODO the following logic exist in 2 places: figure out how to reuse it
-                            val videoFile = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), VideoDownloader(item).generateVideoFilePath())
-                            if (videoFile.exists() && videoFile.isFile) {
+                            val vd = VideoDownloader(item)
+                            if (vd.isVideoAvailableLocally()) {
                                 //video exist, don't download it
-                                val uri = Uri.parse(videoFile.absolutePath)
+                                val uri = Uri.parse(vd.generateAbsoluteVideoLocalFilePath().toString())
                                 val intent = Intent(Intent.ACTION_VIEW, uri)
                                 intent.setDataAndType(uri, "video/mp4") //TODO maybe just "video/*" ?
                                 startActivity(intent)
