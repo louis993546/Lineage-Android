@@ -5,7 +5,7 @@ import com.squareup.leakcanary.LeakCanary
 import timber.log.Timber
 
 /**
- * Created by louistsai on 21.08.17.
+ * Created by Louis on 21.08.17.
  */
 class App : Application() {
     override fun onCreate() {

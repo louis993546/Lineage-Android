@@ -1,5 +1,6 @@
 package io.github.louistsaitszho.lineage.model
 
+import android.arch.persistence.room.Room
 import android.content.Context
 import io.github.louistsaitszho.lineage.attributes.VideoAttribute
 import io.github.louistsaitszho.lineage.model.attributes.ModuleAttribute
@@ -18,9 +19,14 @@ import java.util.*
  *
  * Created by Louis Tsai on 27.08.17.
  */
-class DataCenterImpl(context: Context?) : DataCenter {
+class DataCenterImpl(context: Context) : DataCenter {
     private val apiWrapper = LineageApiWrapperImpl()
     private val preferenceStorage : PreferenceStorage = PreferenceStorageImpl(context)
+    private val database = Room.databaseBuilder(
+            context.applicationContext,
+            AppDatabase::class.java,
+            "lineage-database") //todo move it to system config or sth
+            .build()
 
     /**
      * TODO retrieve data from local storage

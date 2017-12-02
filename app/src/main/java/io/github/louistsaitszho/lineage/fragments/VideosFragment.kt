@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
@@ -22,7 +21,6 @@ import io.github.louistsaitszho.lineage.activities.MainActivity
 import io.github.louistsaitszho.lineage.model.*
 import kotlinx.android.synthetic.main.fragment_videos.*
 import timber.log.Timber
-import java.io.File
 
 
 /**
@@ -36,7 +34,7 @@ class VideosFragment : Fragment() {
     private var videosAdapter: RecyclerViewAdapter? = null
     public var currentModuleId: String? = null      //todo this should be lateinit?
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         dataCenter = DataCenterImpl(context)
     }

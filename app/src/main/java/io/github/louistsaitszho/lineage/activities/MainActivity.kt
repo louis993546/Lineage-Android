@@ -13,6 +13,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import io.github.louistsaitszho.lineage.R
 import io.github.louistsaitszho.lineage.fragments.VideosFragment
+import io.github.louistsaitszho.lineage.model.DataCenter
 import io.github.louistsaitszho.lineage.model.DataCenterImpl
 import io.github.louistsaitszho.lineage.model.DataListener
 import io.github.louistsaitszho.lineage.model.Module
@@ -26,7 +27,8 @@ import timber.log.Timber
  * - VideoFragment
  */
 class MainActivity : AppCompatActivity() {
-    val dataCenter = DataCenterImpl(this)
+//    val dataCenter = DataCenterImpl(this)
+    lateinit var dataCenter: DataCenter
     private val requestCodeWriteExternalStorage = 123
 
     //This is the way to declare Static final in Kotlin
@@ -81,6 +83,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        dataCenter = DataCenterImpl(this)
 
         //toolbar and drawer setup
         setSupportActionBar(toolbar)
