@@ -30,7 +30,6 @@ class DataCenterImpl(context: Context) : DataCenter {
             .build()
 
     /**
-     * TODO retrieve data from local storage
      * Get a list of videos from a callback
      * @param callback will be trigger once the data is ready (or failed)
      * @return a Cancelable object so you can cancel operation if you want to (memory leak, prevent

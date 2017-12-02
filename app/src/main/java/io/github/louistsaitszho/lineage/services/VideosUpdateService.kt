@@ -1,15 +1,11 @@
 package io.github.louistsaitszho.lineage.services
 
-import android.os.Environment
+import android.Manifest
+import android.content.pm.PackageManager
+import android.support.v4.content.ContextCompat
 import com.firebase.jobdispatcher.JobParameters
 import com.firebase.jobdispatcher.JobService
-import io.github.louistsaitszho.lineage.SystemConfig
-import io.github.louistsaitszho.lineage.model.Cancelable
-import io.github.louistsaitszho.lineage.model.DataCenterImpl
-import io.github.louistsaitszho.lineage.model.DataListener
-import io.github.louistsaitszho.lineage.model.Video
-import timber.log.Timber
-import java.io.File
+import io.github.louistsaitszho.lineage.model.*
 
 /**
  * Check if there is any video that needs to be download
@@ -30,45 +26,17 @@ class VideosUpdateService: JobService() {
                     result?.forEach {
                         dataCenter.getVideos(it, object : DataListener<MutableList<Video>> {
                             override fun onSuccess(source: Int, result: MutableList<Video>?) {
-                                //todo
-
-                                //3. get list of videos on device right now on this module
-                                val downloadFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-                                Timber.d("Download folder path = '%s'", downloadFolder.absolutePath)
-                                val lineageFolder = File(downloadFolder, "${SystemConfig.downloadFolderName}/")
-                                Timber.d("Lineage folder path = '%s'", lineageFolder.absolutePath)
-                                if (!lineageFolder.exists() || !lineageFolder.isDirectory) {
-                                    Timber.d("Lineage folder does not exist, making it now")
-                                    val success = lineageFolder.mkdirs()
-                                    if (!success) {
-                                        Timber.d("Create lineage folder failed!")
+                                result?.forEach {
+                                    val videoDownloader = VideoDownloader(it)
+                                    if (!videoDownloader.isVideoAvailableLocally()) {
+                                        val permissionCheck = ContextCompat.checkSelfPermission(this@VideosUpdateService, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                                        if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+                                            videoDownloader.downloadVideoNow(this@VideosUpdateService)
+                                        } else {
+                                            //todo ask for permission, and after that resume download/schedule another video check
+                                        }
                                     }
                                 }
-                                val moduleFolders = lineageFolder.list()
-                                if (moduleFolders == null || moduleFolders.isEmpty()) {
-                                    Timber.d("Lineage folder is null/has no modules")
-                                } else {
-                                    Timber.d("here's the list of folders: '%s'", moduleFolders.contentDeepToString())
-                                }
-
-                                val moduleFolder = File(lineageFolder, "$it/")
-                                val files = moduleFolder.list()
-                                Timber.d("here's the list of files in module '%s': '%s'", it, files.contentDeepToString())
-
-                                //4. compare and come up with a list of videos that needs to be download
-
-
-                                //5. ask DownloadManager to download the content accordingly
-//                                val downloadManager = getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-//                                downloadManager.enqueue(
-//                                        DownloadManager.Request(null)
-//                                                .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI)   //todo check with garima
-//                                                .setAllowedOverRoaming(false)
-//                                                .setTitle("Downloading something (Hard code)")
-//                                                .setDescription("Insert title of video here")
-//                                                .setVisibleInDownloadsUi(true)
-//                                                .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
-//                                )
                             }
 
                             override fun onFailure(error: Throwable) {
