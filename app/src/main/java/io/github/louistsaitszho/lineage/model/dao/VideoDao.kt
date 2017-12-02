@@ -12,8 +12,8 @@ interface VideoDao {
     fun getAllVideosInModule(moduleId: String): List<Video>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAllVideosOfThisModule(vararg video: Video)
+    fun upsertVideos(videos: List<Video>)
 
     @Delete
-    fun deleteVideo(vararg video: Video)
+    fun deleteVideos(video: List<Video>)
 }

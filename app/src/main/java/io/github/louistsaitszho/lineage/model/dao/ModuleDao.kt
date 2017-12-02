@@ -12,8 +12,8 @@ interface ModuleDao {
     fun getAllModules(): List<Module>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAllModules(vararg module: Module)
+    fun upsertModules(modules: List<Module>)
 
     @Delete
-    fun deleteModule(vararg module: Module)
+    fun deleteModules(modules: List<Module>)
 }

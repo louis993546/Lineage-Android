@@ -2,6 +2,7 @@ package io.github.louistsaitszho.lineage
 
 import android.app.Application
 import com.squareup.leakcanary.LeakCanary
+import io.github.louistsaitszho.lineage.trees.DebugTree
 import timber.log.Timber
 
 /**
@@ -15,8 +16,7 @@ class App : Application() {
             // You should not init your app in this process.
             return
         }
-        Timber.plant(Timber.DebugTree())
+        Timber.plant(DebugTree(applicationContext))
         LeakCanary.install(this)
-        //TODO crash report (check how to integrate with Timber)
     }
 }

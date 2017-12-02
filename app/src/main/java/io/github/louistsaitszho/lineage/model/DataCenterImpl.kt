@@ -26,6 +26,7 @@ class DataCenterImpl(context: Context) : DataCenter {
             context.applicationContext,
             AppDatabase::class.java,
             "lineage-database") //todo move it to system config or sth
+            .allowMainThreadQueries()   //todo this is straight up a bad idea
             .build()
 
     /**
@@ -44,6 +45,9 @@ class DataCenterImpl(context: Context) : DataCenter {
             true
         }
 
+        val offlineVideos = database.videoDao().getAllVideosInModule(moduleId)
+        callback.onSuccess(DataListener.SOURCE_LOCAL, offlineVideos.toMutableList())
+
         call.enqueue(object : Callback<JsonApiResponse<VideoAttribute>> {
             override fun onResponse(call: Call<JsonApiResponse<VideoAttribute>>?, response: Response<JsonApiResponse<VideoAttribute>>?) {
                 //todo check errors
@@ -55,6 +59,12 @@ class DataCenterImpl(context: Context) : DataCenter {
                         Timber.d(it.toString())
                         outputList.add(Video(it))
                     }
+
+                    //remove all old videos
+                    database.videoDao().deleteVideos(offlineVideos)
+                    //insert all new videos
+                    database.videoDao().upsertVideos(outputList)
+
                     if (call?.isCanceled == false)
                         callback.onSuccess(DataListener.SOURCE_REMOTE, outputList)
                 }
@@ -77,6 +87,9 @@ class DataCenterImpl(context: Context) : DataCenter {
             true
         }
 
+        val offlineModules = database.moduleDao().getAllModules().toMutableList()
+        callback.onSuccess(DataListener.SOURCE_LOCAL, offlineModules)
+
         call.enqueue(object : Callback<JsonApiResponse<ModuleAttribute>> {
             override fun onResponse(call: Call<JsonApiResponse<ModuleAttribute>>?, response: Response<JsonApiResponse<ModuleAttribute>>?) {
                 if (response?.errorBody() != null) {
@@ -92,6 +105,12 @@ class DataCenterImpl(context: Context) : DataCenter {
                     response.body()?.data?.forEach {
                         outputList.add(Module(it))
                     }
+
+                    //remove all old videos
+                    database.moduleDao().deleteModules(offlineModules)
+                    //insert all new videos
+                    database.moduleDao().upsertModules(outputList)
+
                     if (call?.isCanceled == false)
                         callback.onSuccess(DataListener.SOURCE_REMOTE, outputList)
                 }

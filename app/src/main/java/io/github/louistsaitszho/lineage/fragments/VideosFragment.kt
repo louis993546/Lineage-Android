@@ -61,6 +61,10 @@ class VideosFragment : Fragment() {
 
         getVideoCancelable = dataCenter?.getVideos(moduleId, object: DataListener<List<Video>> {
             override fun onSuccess(source: Int, result: List<Video>?) {
+                if (source == DataListener.SOURCE_LOCAL) {
+                    Timber.d("getting offline info: '%s'", result)
+                }
+
                 swipe_refresh_layout.isRefreshing = false
                 var listIsEmpty = true
                 if (result != null && result.isEmpty().not()) {
