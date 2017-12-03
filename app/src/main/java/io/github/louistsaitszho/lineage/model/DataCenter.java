@@ -16,6 +16,8 @@ public interface DataCenter {
 
     Cancelable getModules(DataListener<List<Module>> callback);
 
+    Cancelable setModuleToNeedsDownload(Module module, boolean needsDownload);
+
     /**
      * Get the school code
      * This always gets stored on the device itself, because this is how the cloud know which school
@@ -25,8 +27,6 @@ public interface DataCenter {
     Cancelable getSchoolCodeLocally(DataListener<String> callback);
 
     Cancelable signIn(String schoolCode, DataListener<School> callback);
-
-    Cancelable getNeedsDownloadModulesId(DataListener<List<String>> callback);
 
     /**
      * Most implementations of data storage or fetching library requires termination of something.

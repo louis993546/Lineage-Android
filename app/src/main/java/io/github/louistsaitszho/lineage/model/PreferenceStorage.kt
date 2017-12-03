@@ -20,12 +20,4 @@ interface PreferenceStorage {
      *
      */
     fun setSchoolKey(key: String)
-
-    /**
-     * get a list of ids (String) of modules, which needs to be downloaded automatically
-     * @return a set of ids (String), non-null (empty is fine but null is not)
-     */
-    fun getNeedsDownloadModulesId(): Set<String>
-//    fun addNeedsDownloadModulesId(vararg ids: String)
-//    fun removeNeedsDownloadModulesId(vararg ids: String)
 }

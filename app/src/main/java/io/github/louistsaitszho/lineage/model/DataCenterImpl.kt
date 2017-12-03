@@ -2,6 +2,7 @@ package io.github.louistsaitszho.lineage.model
 
 import android.arch.persistence.room.Room
 import android.content.Context
+import io.github.louistsaitszho.lineage.ModuleDiff
 import io.github.louistsaitszho.lineage.attributes.VideoAttribute
 import io.github.louistsaitszho.lineage.model.attributes.ModuleAttribute
 import io.github.louistsaitszho.lineage.model.poko.JsonApiResponse
@@ -105,13 +106,16 @@ class DataCenterImpl(context: Context) : DataCenter {
                         outputList.add(Module(it))
                     }
 
-                    //remove all old videos
-                    database.moduleDao().deleteModules(offlineModules)
-                    //insert all new videos
-                    database.moduleDao().upsertModules(outputList)
-
                     if (call?.isCanceled == false)
                         callback.onSuccess(DataListener.SOURCE_REMOTE, outputList)
+
+                    val md = ModuleDiff(offlineModules, outputList)
+                    //remove all old videos
+                    database.moduleDao().deleteModules(md.generateToBeRemoveModules().toList())
+                    //insert all new videos
+                    database.moduleDao().upsertModules(md.generateToBeAddedModules().toList())
+                    //update updated videos
+                    database.moduleDao().upsertModules(md.generateToBeUpdateModules().toList())
                 }
             }
 
@@ -129,7 +133,6 @@ class DataCenterImpl(context: Context) : DataCenter {
      * TODO temporarily return hard code school key
      */
     override fun getSchoolCodeLocally(callback: DataListener<String>): Cancelable? {
-//        callback.onSuccess(DataListener.SOURCE_LOCAL, "123")
         if (preferenceStorage.hasSchoolKey()) {
             callback.onSuccess(DataListener.SOURCE_LOCAL, preferenceStorage.getSchoolKey())
         } else {
@@ -183,9 +186,9 @@ class DataCenterImpl(context: Context) : DataCenter {
         return cancelable
     }
 
-    override fun getNeedsDownloadModulesId(callback: DataListener<List<String>>): Cancelable? {
-        callback.onSuccess(DataListener.SOURCE_LOCAL, preferenceStorage.getNeedsDownloadModulesId().toList())
-        return null
+    override fun setModuleToNeedsDownload(module: Module?, needsDownload: Boolean): Cancelable {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
 
     override fun close() {

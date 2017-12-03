@@ -15,7 +15,6 @@ class PreferenceStorageImpl(private val context: Context?) : PreferenceStorage {
 
     object Keys {
         val SCHOOL_KEY = "school_key"
-        val NEEDS_DOWNLOAD_MODULE_LIST_KEY = "module_list_key"
     }
 
     /**
@@ -37,44 +36,6 @@ class PreferenceStorageImpl(private val context: Context?) : PreferenceStorage {
                 ?.putString(Keys.SCHOOL_KEY, key)
                 ?.apply()
     }
-
-    override fun getNeedsDownloadModulesId(): Set<String> {
-        var moduleIdSet = getUserPreference()?.getStringSet(Keys.NEEDS_DOWNLOAD_MODULE_LIST_KEY, null)
-        if (moduleIdSet == null) {
-            moduleIdSet = setOf()   //make it an empty set
-        }
-        return moduleIdSet
-    }
-
-//    //TODO think about how to refactor add and remove NeedsDownloadModulesId -> they are only different by 2 line
-//
-//    override fun addNeedsDownloadModulesId(vararg ids: String) {
-//        val currentIdList = getNeedsDownloadModulesId().toMutableList()
-//        var needsUpdate = false
-//        ids.forEach { id ->
-//            if (!currentIdList.contains(id)) {
-//                currentIdList.add(id)
-//                needsUpdate = true
-//            }
-//        }
-//        if (needsUpdate) {
-//            getUserPreference().edit().putStringSet(Keys.NEEDS_DOWNLOAD_MODULE_LIST_KEY, currentIdList.toSet()).apply()
-//        }
-//    }
-//
-//    override fun removeNeedsDownloadModulesId(vararg ids: String) {
-//        val currentIdList = getNeedsDownloadModulesId().toMutableList()
-//        var needsUpdate = false
-//        ids.forEach { id ->
-//            if (currentIdList.contains(id)) {
-//                currentIdList.remove(id)
-//                needsUpdate = true
-//            }
-//        }
-//        if (needsUpdate) {
-//            getUserPreference().edit().putStringSet(Keys.NEEDS_DOWNLOAD_MODULE_LIST_KEY, currentIdList.toSet()).apply()
-//        }
-//    }
 
     private fun getUserPreference() = context?.getSharedPreferences(FileName.USER_PREFERENCE, Context.MODE_PRIVATE)
 

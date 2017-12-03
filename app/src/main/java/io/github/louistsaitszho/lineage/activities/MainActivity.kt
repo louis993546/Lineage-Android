@@ -58,21 +58,13 @@ class MainActivity : AppCompatActivity() {
                 videoFragment.fetchVideos(videoFragment.currentModuleId)
                 true
             }
-            R.id.no_thumbnail -> {
-//                layoutOption = NO_THUMBNAIL
-                //todo call fragment to call adapter to change viewholder type
+            R.id.action_auto_download_checkbox -> {
+                val shouldAutoDownload = item.isChecked.not()
+                item.isChecked = shouldAutoDownload
+                //todo ask datacenter to save that this module (don't) need auto downloadd
                 true
             }
-            R.id.medium -> {
-//                layoutOption = MEDIUM
-                //todo call fragment to call adapter to change viewholder type
-                true
-            }
-            R.id.large -> {
-//                layoutOption = LARGE
-                //todo call fragment to call adapter to change viewholder type
-                true
-            }
+            //todo figure out how to deal with these thumbnails later
             else -> false
         }
     }

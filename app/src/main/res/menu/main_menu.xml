@@ -5,24 +5,15 @@
     <item
         android:id="@+id/action_refresh"
         android:orderInCategory="50"
-        android:title="@string/action_refresh"
+        android:title="@string/label_action_refresh"
         android:icon="@drawable/ic_refresh_light_24dp"
         app:showAsAction="ifRoom"/>
 
     <item
-        android:id="@+id/no_thumbnail"
+        android:id="@+id/action_auto_download_checkbox"
         android:orderInCategory="100"
-        android:title="@string/no_thumbnail"
-        app:showAsAction="never"/>
-    <item
-        android:id="@+id/medium"
-        android:orderInCategory="200"
-        android:title="@string/medium"
-        app:showAsAction="never"/>
-    <item
-        android:id="@+id/large"
-        android:orderInCategory="300"
-        android:title="@string/large"
+        android:title="@string/label_action_auto_download"
+        android:checkable="true"
         app:showAsAction="never"/>
 
 </menu>

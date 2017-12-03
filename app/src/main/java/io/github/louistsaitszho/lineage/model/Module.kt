@@ -14,7 +14,9 @@ data class Module(
         @PrimaryKey
         val id: String,
         @ColumnInfo(name = "name")
-        val name: String
+        val name: String,
+        @ColumnInfo(name = "auto_download")
+        var needsAutoDownload: Boolean
 ) {
-    constructor(apiResponse: Data<ModuleAttribute>) : this(apiResponse.id, apiResponse.attributes.name)
+    constructor(apiResponse: Data<ModuleAttribute>) : this(apiResponse.id, apiResponse.attributes.name, true)   //by default all modules should be auto-download
 }
