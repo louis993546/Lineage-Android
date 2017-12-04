@@ -3,6 +3,7 @@ package io.github.louistsaitszho.lineage.model
 import android.arch.persistence.room.Room
 import android.content.Context
 import io.github.louistsaitszho.lineage.ModuleDiff
+import io.github.louistsaitszho.lineage.VideoDiff
 import io.github.louistsaitszho.lineage.attributes.VideoAttribute
 import io.github.louistsaitszho.lineage.model.attributes.ModuleAttribute
 import io.github.louistsaitszho.lineage.model.poko.JsonApiResponse
@@ -60,15 +61,16 @@ class DataCenterImpl(context: Context) : DataCenter {
                         outputList.add(Video(it))
                     }
 
-                    //todo don't do this. use VideoDiff
-
-                    //remove all old videos
-                    database.videoDao().deleteVideos(offlineVideos)
-                    //insert all new videos
-                    database.videoDao().upsertVideos(outputList)
-
                     if (call?.isCanceled == false)
                         callback.onSuccess(DataListener.SOURCE_REMOTE, outputList)
+
+                    val vd = VideoDiff(offlineVideos, outputList)
+                    //remove all old videos
+                    database.videoDao().deleteVideos(vd.generateToBeRemoveList().toList())
+                    //insert all new videos
+                    database.videoDao().upsertVideos(vd.generateToBeAddedList().toList())
+                    //update updated videos
+                    database.videoDao().upsertVideos(vd.generateToBeUpdateList().toList())
                 }
             }
 
@@ -112,11 +114,11 @@ class DataCenterImpl(context: Context) : DataCenter {
                         callback.onSuccess(DataListener.SOURCE_REMOTE, outputList)
 
                     val md = ModuleDiff(offlineModules, outputList)
-                    //remove all old videos
+                    //remove all old modules
                     database.moduleDao().deleteModules(md.generateToBeRemoveModules().toList())
-                    //insert all new videos
+                    //insert all new modules
                     database.moduleDao().upsertModules(md.generateToBeAddedModules().toList())
-                    //update updated videos
+                    //update updated modules
                     database.moduleDao().upsertModules(md.generateToBeUpdateModules().toList())
                 }
             }

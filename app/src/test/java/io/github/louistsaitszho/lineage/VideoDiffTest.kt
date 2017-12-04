@@ -5,6 +5,8 @@ import org.junit.Assert
 import org.junit.Test
 
 /**
+ * Make sure VideoDiff works correctly
+ *
  * Created by louis on 04.12.17.
  */
 class VideoDiffTest {
@@ -36,7 +38,7 @@ class VideoDiffTest {
 
     @Test
     fun remove_isCorrect() {
-        val expectation = listOf(
+        val expectation = setOf(
             Video("1", "url 1", "turl 1", "title 1", "mid 1"),
             Video("2", "url 2", "turl 2", "title 2", "mid 2")
         )
@@ -46,7 +48,7 @@ class VideoDiffTest {
 
     @Test
     fun add_isCorrect() {
-        val expectation = listOf(
+        val expectation = setOf(
                 Video("11", "url 10", "turl 10", "title 10", "mid 10"),
                 Video("12", "url 10", "turl 10", "title 10", "mid 10")
         )
@@ -56,7 +58,7 @@ class VideoDiffTest {
 
     @Test
     fun update_isCorrect() {
-        val expectation = listOf(
+        val expectation = setOf(
                 Video("5", "url not 5", "turl 5", "title 5", "mid 5"),
                 Video("6", "url 6", "not turl 6", "title 6", "mid 6"),
                 Video("7", "url 7", "turl 7", "not title 7", "mid 7")
