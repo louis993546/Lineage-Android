@@ -9,7 +9,7 @@ import org.junit.Test
  *
  * Created by louis on 03.12.17.
  */
-class ModulesDiffTest {
+class ModuleDiffTest {
     val oldModuleList = listOf(
             Module("1", "1", true),
             Module("2", "2", true),

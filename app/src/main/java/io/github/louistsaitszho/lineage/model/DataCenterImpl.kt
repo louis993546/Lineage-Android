@@ -60,6 +60,8 @@ class DataCenterImpl(context: Context) : DataCenter {
                         outputList.add(Video(it))
                     }
 
+                    //todo don't do this. use VideoDiff
+
                     //remove all old videos
                     database.videoDao().deleteVideos(offlineVideos)
                     //insert all new videos
@@ -94,7 +96,7 @@ class DataCenterImpl(context: Context) : DataCenter {
             override fun onResponse(call: Call<JsonApiResponse<ModuleAttribute>>?, response: Response<JsonApiResponse<ModuleAttribute>>?) {
                 if (response?.errorBody() != null) {
                     //todo i need something to handle standard networking error and stuff
-                    Timber.e(Throwable("user encounter networking error when calling GET modules: $response."))
+                    Timber.e("user encounter networking error when calling GET modules: $response")
                 } else if (response?.body()?.error != null && response.body()?.error?.isNotEmpty() == true) {
                     //todo this will be the response specific error (and it's handling)
                 }
