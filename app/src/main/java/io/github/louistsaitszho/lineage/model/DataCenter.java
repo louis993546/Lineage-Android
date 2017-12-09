@@ -16,7 +16,7 @@ public interface DataCenter {
 
     Cancelable getModules(DataListener<List<Module>> callback);
 
-    Cancelable setModuleToNeedsDownload(Module module, boolean needsDownload);
+    void setModuleToNeedsDownload(Module module, boolean needsDownload);
 
     /**
      * Get the school code

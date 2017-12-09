@@ -190,12 +190,12 @@ class DataCenterImpl(context: Context) : DataCenter {
         return cancelable
     }
 
-    override fun setModuleToNeedsDownload(module: Module?, needsDownload: Boolean): Cancelable {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-
+    override fun setModuleToNeedsDownload(module: Module, needsDownload: Boolean) {
+        module.needsAutoDownload = needsDownload
+        database.moduleDao().upsertModules(listOf(module))
     }
 
     override fun close() {
-        //TODO realm/SQLite/object box/whatever
+        //nothing to close here (for now
     }
 }

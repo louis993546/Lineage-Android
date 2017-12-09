@@ -10,7 +10,6 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import io.github.louistsaitszho.lineage.R
 import io.github.louistsaitszho.lineage.fragments.VideosFragment
 import io.github.louistsaitszho.lineage.model.DataCenter
@@ -27,9 +26,9 @@ import timber.log.Timber
  * - VideoFragment
  */
 class MainActivity : AppCompatActivity() {
-//    val dataCenter = DataCenterImpl(this)
     lateinit var dataCenter: DataCenter
     private val requestCodeWriteExternalStorage = 123
+    var currentModule: Module? = null
 
     //This is the way to declare Static final in Kotlin
     companion object {
@@ -38,8 +37,10 @@ class MainActivity : AppCompatActivity() {
         const val NO_THUMBNAIL = "No Thumbnail"
     }
 
-    //Layout option prone to change
-//    private var layoutOption = NO_THUMBNAIL
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        //TODO set checkbox accordingly
+        return super.onPrepareOptionsMenu(menu)
+    }
 
     //This creates a menu that displays 'Settings' on the top right corner.
     //Such Menu can be modified in the Folder app/res/menu/main_menu.xml
@@ -60,8 +61,8 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.action_auto_download_checkbox -> {
                 val shouldAutoDownload = item.isChecked.not()
+                dataCenter.setModuleToNeedsDownload(currentModule, shouldAutoDownload)
                 item.isChecked = shouldAutoDownload
-                //todo ask datacenter to save that this module (don't) need auto downloadd
                 true
             }
             //todo figure out how to deal with these thumbnails later
@@ -90,24 +91,41 @@ class MainActivity : AppCompatActivity() {
 
         dataCenter.getSchoolCodeLocally(object: DataListener<String> {
             override fun onSuccess(source: Int, result: String?) {
-                //TODO inflate menu accordingly
                 dataCenter.getModules(object: DataListener<MutableList<Module>> {
                     override fun onSuccess(source: Int, result: MutableList<Module>?) {
-                        //todo i am just gonna ignore the whole offline cache thing for now
-                        //todo figure out how to add sub header "Modules"
-                        result?.forEachIndexed { index, module ->
-                            navigation_view.menu.add(0, index, index, module.name)
+                        if (source == DataListener.SOURCE_LOCAL) {
+                            //todo figure out how to add sub header "Modules"
+                            //todo assumption: local always gets loaded before remote
+                            result?.forEachIndexed { index, module ->
+                                navigation_view.menu.add(0, module.id.hashCode(), index, module.name)
+                            }
+                        } else if (source == DataListener.SOURCE_REMOTE) {
+                            //only add modules that is new
+                            result?.forEach { module ->
+                                val existingModule = navigation_view.menu.findItem(module.id.hashCode())
+                                if (existingModule != null) {
+                                    //module already exist, next
+                                } else {
+                                    navigation_view.menu.add(0, module.id.hashCode(), navigation_view.menu.size(), module.name)
+                                }
+                            }
                         }
-                        navigation_view.setNavigationItemSelectedListener {
-                            Toast.makeText(this@MainActivity, "a module selected: " + it.title, Toast.LENGTH_LONG).show()
-                            supportActionBar?.title = it.title
-                            it.isChecked = true
+                        navigation_view.setNavigationItemSelectedListener { menuItem ->
+                            result?.forEach { thisModule ->
+                                if (thisModule.id.hashCode() == menuItem.itemId) {
+                                    Timber.d("this module = %s", thisModule)
+                                    currentModule = thisModule
+                                    supportActionBar?.title = thisModule.name
+                                    menuItem.isChecked = true
+                                    return@forEach  //module has been found, can skip the rest
+                                }
+                            }
                             true
                         }
                     }
 
                     override fun onFailure(error: Throwable) {
-                        //todo ii need something in the drawer ui to allow user to refresh this list
+                        //todo i need something in the drawer ui to allow user to refresh this list
                         Timber.d(Throwable("figure out what this could be and fix it", error))
                     }
                 })
@@ -115,7 +133,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onFailure(error: Throwable) {
-                //TODO launch something and ask for school key first
+                //TODO close everything down, go back to SignInActivity
                 Timber.d(Throwable("Probably because no school code", error))
             }
         })
