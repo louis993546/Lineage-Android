@@ -98,9 +98,14 @@ class MainActivity : AppCompatActivity() {
                     override fun onSuccess(source: Int, result: MutableList<Module>?) {
                         if (source == DataListener.SOURCE_LOCAL) {
                             //todo figure out how to add sub header "Modules"
-                            //todo assumption: local always gets loaded before remote
+                            //todo unsafe assumption: local always gets loaded before remote
                             result?.forEachIndexed { index, module ->
-                                navigation_view.menu.add(0, module.id.hashCode(), index, module.name)
+                                navigation_view.menu.add(
+                                        0,
+                                        module.id.hashCode(),
+                                        index,
+                                        module.name
+                                )
                             }
                         } else if (source == DataListener.SOURCE_REMOTE) {
                             //only add modules that is new
@@ -109,7 +114,12 @@ class MainActivity : AppCompatActivity() {
                                 if (existingModule != null) {
                                     //module already exist, next
                                 } else {
-                                    navigation_view.menu.add(0, module.id.hashCode(), navigation_view.menu.size(), module.name)
+                                    navigation_view.menu.add(
+                                            0,
+                                            module.id.hashCode(),
+                                            navigation_view.menu.size(),
+                                            module.name
+                                    )
                                 }
                             }
                         }
@@ -133,30 +143,8 @@ class MainActivity : AppCompatActivity() {
                     }
                 })
 
-                //schedule download (can run everytime because it will get replace)
-                val dispatcher = FirebaseJobDispatcher(GooglePlayDriver(this@MainActivity))
-                val periodicity = TimeUnit.HOURS.toSeconds(6).toInt()
-                val toleranceInterval = TimeUnit.HOURS.toSeconds(2).toInt()
-                val downloadJob = dispatcher.newJobBuilder()
-                        .setService(VideosUpdateService::class.java)
-                        .setTag("download-service")
-                        .setRecurring(true)
-                        .setTrigger(Trigger.executionWindow(periodicity, periodicity + toleranceInterval))
-                        .setLifetime(Lifetime.FOREVER)
-                        .setReplaceCurrent(true)
-                        .setRetryStrategy(RetryStrategy.DEFAULT_LINEAR)
-                        .setConstraints(
-                                Constraint.DEVICE_IDLE
-                        )
-                        .build()
-                val scheduleResult = dispatcher.schedule(downloadJob)
-                when (scheduleResult) {
-                    FirebaseJobDispatcher.SCHEDULE_RESULT_SUCCESS -> Timber.d("schedule download successful")
-                    FirebaseJobDispatcher.SCHEDULE_RESULT_UNKNOWN_ERROR -> Timber.e("unknown error when scheduling download service!")
-                    FirebaseJobDispatcher.SCHEDULE_RESULT_NO_DRIVER_AVAILABLE -> Timber.e("driver not available when scheduling download service!")
-                    FirebaseJobDispatcher.SCHEDULE_RESULT_UNSUPPORTED_TRIGGER -> Timber.e("unsupported trigger! wrong implementation!")
-                    FirebaseJobDispatcher.SCHEDULE_RESULT_BAD_SERVICE -> Timber.e("bad service (whatever it means)")
-                }
+                //schedule download (can run every time because it will get replace)
+                scheduleDownloadService()
             }
 
             override fun onFailure(error: Throwable) {
@@ -164,6 +152,37 @@ class MainActivity : AppCompatActivity() {
                 Timber.d(Throwable("Probably because no school code", error))
             }
         })
+    }
+
+    /**
+     * TODO make a lot of the params changeable (in setting)
+     * TODO better error messages
+     * schedule the download service to run under certain condition
+     */
+    private fun scheduleDownloadService() {
+        val dispatcher = FirebaseJobDispatcher(GooglePlayDriver(this@MainActivity))
+        val periodicity = TimeUnit.HOURS.toSeconds(6).toInt()
+        val toleranceInterval = TimeUnit.HOURS.toSeconds(2).toInt()
+        val downloadJob = dispatcher.newJobBuilder()
+                .setService(VideosUpdateService::class.java)
+                .setTag("download-service")
+                .setRecurring(true)
+                .setTrigger(Trigger.executionWindow(periodicity, periodicity + toleranceInterval))
+                .setLifetime(Lifetime.FOREVER)
+                .setReplaceCurrent(true)
+                .setRetryStrategy(RetryStrategy.DEFAULT_LINEAR)
+                .setConstraints(
+                        Constraint.DEVICE_IDLE
+                )
+                .build()
+        val scheduleResult = dispatcher.schedule(downloadJob)
+        when (scheduleResult) {
+            FirebaseJobDispatcher.SCHEDULE_RESULT_SUCCESS -> Timber.d("schedule download successful")
+            FirebaseJobDispatcher.SCHEDULE_RESULT_UNKNOWN_ERROR -> Timber.e("unknown error when scheduling download service!")
+            FirebaseJobDispatcher.SCHEDULE_RESULT_NO_DRIVER_AVAILABLE -> Timber.e("driver not available when scheduling download service!")
+            FirebaseJobDispatcher.SCHEDULE_RESULT_UNSUPPORTED_TRIGGER -> Timber.e("unsupported trigger! wrong implementation!")
+            FirebaseJobDispatcher.SCHEDULE_RESULT_BAD_SERVICE -> Timber.e("bad service (whatever it means)")
+        }
     }
 
     /**
@@ -186,7 +205,10 @@ class MainActivity : AppCompatActivity() {
      */
     private fun makeSureWriteExternalStorageIsAvailable() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE))
+            {
                 showRationaleForWriteExternalStorage()
             } else {
                 askForExternalStoragePermission()
@@ -194,8 +216,17 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Ask for external storage permission (dah!)
+     * Since there are 2 places in this activity that uses this, i just wrap it and make it look
+     * nicer
+     */
     private fun askForExternalStoragePermission() {
-        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), requestCodeWriteExternalStorage)
+        ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                requestCodeWriteExternalStorage
+        )
     }
 
     /**

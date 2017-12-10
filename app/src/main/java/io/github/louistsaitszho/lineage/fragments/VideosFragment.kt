@@ -1,8 +1,11 @@
 package io.github.louistsaitszho.lineage.fragments
 
 import android.Manifest
+import android.app.DownloadManager
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
@@ -116,17 +119,34 @@ class VideosFragment : Fragment() {
         dataCenter?.close()
     }
 
+    /**
+     * Download this particular video to a specific location
+     * TODO need to share receiver
+     * @param video is the video that you want to download
+     */
     private fun downloadVideo(video: Video) {
-        //TODO also include broadcast listener stuff here
-
-
         Timber.d("a video selected")
         val videoDownloader = VideoDownloader(video)
 
         val permissionCheck = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)
         //todo do i really need shouldShowRequestPermissionRationale here???
         if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
-            videoDownloader.downloadVideoNow(context)
+            val downloadId = videoDownloader.downloadVideoNow(context)
+
+            val intentFilter = IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
+            val downloadCompleteReceiver = object : BroadcastReceiver() {
+                override fun onReceive(context: Context?, intent: Intent?) {
+                    val someId = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0)
+                    if (downloadId == someId) {
+                        videosAdapter?.notifyVideoChangedByVideoId(video)
+                        getContext().unregisterReceiver(this)
+                    } else {
+                        //todo ???
+                        Timber.d("not the video I am looking for: %d vs %d", downloadId, someId)
+                    }
+                }
+            }
+            context.registerReceiver(downloadCompleteReceiver, intentFilter)
         } else {
             //todo ask for permission (again)
         }

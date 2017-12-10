@@ -39,17 +39,18 @@ class VideoDownloader(val video: Video) {
      * method to ask DownloadManager to download video
      */
     @RequiresPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    fun downloadVideoNow(context: Context) {
+    fun downloadVideoNow(context: Context): Long {
         val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
         //todo try catch IAE: if uri is not http/https
-        downloadManager.enqueue(
+        val id = downloadManager.enqueue(
                 DownloadManager.Request(video.getVideoUri())
                         .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, generateVideoFilePath())
                         .setTitle(context.getString(R.string.title_downloading_eclipses))
                         .setDescription(video.title)
                         .setVisibleInDownloadsUi(true)
                         .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
-        )}
-
+        )
+        return id
+    }
     //not sure: a wrapper around broadcast receiver for download complete? (maybe + failure?)
 }

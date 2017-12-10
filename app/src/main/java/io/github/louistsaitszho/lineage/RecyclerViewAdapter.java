@@ -4,6 +4,7 @@ import android.os.Environment;
 import android.support.annotation.LayoutRes;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import java.util.List;
 import io.github.louistsaitszho.lineage.activities.MainActivity;
 import io.github.louistsaitszho.lineage.model.Video;
 import io.github.louistsaitszho.lineage.model.VideoDownloader;
+import timber.log.Timber;
 
 /**
  * todo rename to sth like video adapter (we will have other adapter)
@@ -96,6 +98,22 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public int getItemCount() {
         return listContents.size();
+    }
+
+    /**
+     * make it easier for outsiders to notify something has changed
+     * @param video that has changed (apart from id, because that's how this method finds the video)
+     */
+    public void notifyVideoChangedByVideoId(Video video) {
+        for (int i = 0; i < listContents.size(); i++) {
+            Video v = listContents.get(i);
+            if (TextUtils.equals(v.getId(), video.getId())) {
+                Timber.d("video found, will notify it to change now!");
+                notifyItemChanged(i);
+                return;
+            }
+        }
+        Timber.d("video not found! ui will not change");
     }
 
     //Reference to the Views for each data item
