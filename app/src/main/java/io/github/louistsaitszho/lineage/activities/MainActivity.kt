@@ -10,14 +10,17 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import com.firebase.jobdispatcher.*
 import io.github.louistsaitszho.lineage.R
 import io.github.louistsaitszho.lineage.fragments.VideosFragment
 import io.github.louistsaitszho.lineage.model.DataCenter
 import io.github.louistsaitszho.lineage.model.DataCenterImpl
 import io.github.louistsaitszho.lineage.model.DataListener
 import io.github.louistsaitszho.lineage.model.Module
+import io.github.louistsaitszho.lineage.services.VideosUpdateService
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 
 /**
  * This activity contains
@@ -129,7 +132,31 @@ class MainActivity : AppCompatActivity() {
                         Timber.d(Throwable("figure out what this could be and fix it", error))
                     }
                 })
-                //TODO schedule download here???
+
+                //schedule download (can run everytime because it will get replace)
+                val dispatcher = FirebaseJobDispatcher(GooglePlayDriver(this@MainActivity))
+                val periodicity = TimeUnit.HOURS.toSeconds(6).toInt()
+                val toleranceInterval = TimeUnit.HOURS.toSeconds(2).toInt()
+                val downloadJob = dispatcher.newJobBuilder()
+                        .setService(VideosUpdateService::class.java)
+                        .setTag("download-service")
+                        .setRecurring(true)
+                        .setTrigger(Trigger.executionWindow(periodicity, periodicity + toleranceInterval))
+                        .setLifetime(Lifetime.FOREVER)
+                        .setReplaceCurrent(true)
+                        .setRetryStrategy(RetryStrategy.DEFAULT_LINEAR)
+                        .setConstraints(
+                                Constraint.DEVICE_IDLE
+                        )
+                        .build()
+                val scheduleResult = dispatcher.schedule(downloadJob)
+                when (scheduleResult) {
+                    FirebaseJobDispatcher.SCHEDULE_RESULT_SUCCESS -> Timber.d("schedule download successful")
+                    FirebaseJobDispatcher.SCHEDULE_RESULT_UNKNOWN_ERROR -> Timber.e("unknown error when scheduling download service!")
+                    FirebaseJobDispatcher.SCHEDULE_RESULT_NO_DRIVER_AVAILABLE -> Timber.e("driver not available when scheduling download service!")
+                    FirebaseJobDispatcher.SCHEDULE_RESULT_UNSUPPORTED_TRIGGER -> Timber.e("unsupported trigger! wrong implementation!")
+                    FirebaseJobDispatcher.SCHEDULE_RESULT_BAD_SERVICE -> Timber.e("bad service (whatever it means)")
+                }
             }
 
             override fun onFailure(error: Throwable) {
