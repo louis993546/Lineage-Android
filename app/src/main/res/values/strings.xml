@@ -20,4 +20,7 @@
     <string name="content_description_download_button">Download button</string>
     <string name="content_description_overflow_button">Overflow button</string>
     <string name="label_action_auto_download">Auto download</string>
+    <string name="error_title_download_video_impossible">Cannot download video</string>
+    <string name="error_description_download_video_impossible">Something is wrong with the video and it cannot be download. Please report to us!</string>
+    <string name="button_ok">OK</string>
 </resources>

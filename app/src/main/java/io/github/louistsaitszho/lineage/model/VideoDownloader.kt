@@ -37,11 +37,13 @@ class VideoDownloader(val video: Video) {
 
     /**
      * method to ask DownloadManager to download video
+     * @throws IllegalArgumentException when the video you are trying to download is not possible
+     * with download manager (probably)
      */
+    @Throws(IllegalArgumentException::class)
     @RequiresPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     fun downloadVideoNow(context: Context): Long {
         val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-        //todo try catch IAE: if uri is not http/https
         val id = downloadManager.enqueue(
                 DownloadManager.Request(video.getVideoUri())
                         .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, generateVideoFilePath())

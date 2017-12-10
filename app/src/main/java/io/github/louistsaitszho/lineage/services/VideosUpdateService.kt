@@ -19,6 +19,7 @@ import com.firebase.jobdispatcher.JobParameters
 import com.firebase.jobdispatcher.JobService
 import io.github.louistsaitszho.lineage.R
 import io.github.louistsaitszho.lineage.model.*
+import timber.log.Timber
 
 
 /**
@@ -49,7 +50,11 @@ class VideosUpdateService : JobService() {
                                             if (!videoDownloader.isVideoAvailableLocally()) {
                                                 val permissionCheck = ContextCompat.checkSelfPermission(this@VideosUpdateService, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                                                 if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
-                                                    videoDownloader.downloadVideoNow(this@VideosUpdateService)
+                                                    try {
+                                                        videoDownloader.downloadVideoNow(this@VideosUpdateService)
+                                                    } catch (e: IllegalArgumentException) {
+                                                        Timber.e("Video cannot be download! Check the data right now: '%s'", it.toString())
+                                                    }
                                                 } else {
                                                     val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 

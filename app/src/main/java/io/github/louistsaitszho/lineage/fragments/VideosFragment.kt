@@ -1,6 +1,7 @@
 package io.github.louistsaitszho.lineage.fragments
 
 import android.Manifest
+import android.app.AlertDialog
 import android.app.DownloadManager
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -131,22 +132,33 @@ class VideosFragment : Fragment() {
         val permissionCheck = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)
         //todo do i really need shouldShowRequestPermissionRationale here???
         if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
-            val downloadId = videoDownloader.downloadVideoNow(context)
+            try {
+                val downloadId = videoDownloader.downloadVideoNow(context)
 
-            val intentFilter = IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
-            val downloadCompleteReceiver = object : BroadcastReceiver() {
-                override fun onReceive(context: Context?, intent: Intent?) {
-                    val someId = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0)
-                    if (downloadId == someId) {
-                        videosAdapter?.notifyVideoChangedByVideoId(video)
-                        getContext().unregisterReceiver(this)
-                    } else {
-                        //todo ???
-                        Timber.d("not the video I am looking for: %d vs %d", downloadId, someId)
+                val intentFilter = IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
+                val downloadCompleteReceiver = object : BroadcastReceiver() {
+                    override fun onReceive(context: Context?, intent: Intent?) {
+                        val someId = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0)
+                        if (downloadId == someId) {
+                            videosAdapter?.notifyVideoChangedByVideoId(video)
+                            getContext().unregisterReceiver(this)
+                        } else {
+                            //todo ???
+                            Timber.d("not the video I am looking for: %d vs %d", downloadId, someId)
+                        }
                     }
                 }
+                context.registerReceiver(downloadCompleteReceiver, intentFilter)
+            } catch (e: IllegalArgumentException) {
+                Timber.e("Video cannot be download! Check the data right now: '%s'", video.toString())
+                AlertDialog.Builder(context)
+                        .setTitle(R.string.error_title_download_video_impossible)
+                        .setMessage(R.string.error_description_download_video_impossible)
+                        .setPositiveButton(R.string.button_ok) { dialog, _ ->
+                            dialog.dismiss()
+                        }
+                        .show()
             }
-            context.registerReceiver(downloadCompleteReceiver, intentFilter)
         } else {
             //todo ask for permission (again)
         }
