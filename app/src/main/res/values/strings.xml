@@ -5,4 +5,19 @@
     <string name="no_thumbnail">No Thumbnail</string>
     <string name="medium">Medium</string>
     <string name="large">Large</string>
+    <string name="title_activity_sign_in">SignInActivity</string>
+    <string name="hint_school_code">School code</string>
+    <string name="button_no_access_code">Don\'t have access code?</string>
+    <string name="content_description_open_drawer">Open drawer</string>
+    <string name="content_description_close_drawer">Close drawer</string>
+    <string name="label_action_refresh">Refresh</string>
+    <string name="title_rationale_ext_storage">We need the write to external storage permission</string>
+    <string name="message_rationale_ext_storage">Without this permission, this app will not be able to download contents overnight!</string>
+    <string name="button_try_again">Try again</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="title_downloading_eclipses">Downloading…</string>
+    <string name="error_no_videos_here">No videos yet!</string>
+    <string name="content_description_download_button">Download button</string>
+    <string name="content_description_overflow_button">Overflow button</string>
+    <string name="label_action_auto_download">Auto download</string>
 </resources>

@@ -8,5 +8,6 @@ data class VideoAttribute(
         val thumbnailUrl: String?,
         val host : String,
         val link : String,
-        val title : String
+        val title : String,
+        val module_id: String
 )

@@ -1,4 +1,4 @@
-package io.github.louistsaitszho.lineage;
+package io.github.louistsaitszho.lineage.model;
 
 /**
  * Created by lsteamer on 15/09/2017.

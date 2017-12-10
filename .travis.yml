@@ -1,0 +1,13 @@
+language: android
+android:
+  components:
+    - tools
+    - platform-tools
+    - tools
+
+    - build-tools-26.0.3
+    - android-26
+  
+  # see https://stackoverflow.com/a/41236622
+  before_install:
+    - chmod +x gradlew

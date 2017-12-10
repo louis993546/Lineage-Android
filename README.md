@@ -1,5 +1,7 @@
 # Lineage
 
+[![CircleCI](https://circleci.com/gh/louistsaitszho/Lineage-Android.svg?style=svg)](https://circleci.com/gh/louistsaitszho/Lineage-Android)
+
 ## Why is it call Lineage
 This thing is design for E-Shisha, and the first thing I saw on Wikipedia about Shisha that is also related to Android is the word `Lineage`
 

@@ -1,13 +1,37 @@
 package io.github.louistsaitszho.lineage.activities
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
+import android.support.v7.app.ActionBarDrawerToggle
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-import io.github.louistsaitszho.lineage.ItemListUnit
+import com.firebase.jobdispatcher.*
 import io.github.louistsaitszho.lineage.R
+import io.github.louistsaitszho.lineage.fragments.VideosFragment
+import io.github.louistsaitszho.lineage.model.DataCenter
+import io.github.louistsaitszho.lineage.model.DataCenterImpl
+import io.github.louistsaitszho.lineage.model.DataListener
+import io.github.louistsaitszho.lineage.model.Module
+import io.github.louistsaitszho.lineage.services.VideosUpdateService
+import kotlinx.android.synthetic.main.activity_main.*
+import timber.log.Timber
+import java.util.concurrent.TimeUnit
 
+/**
+ * This activity contains
+ * - Drawer
+ * - Toolbar
+ * - VideoFragment
+ */
 class MainActivity : AppCompatActivity() {
+    lateinit var dataCenter: DataCenter
+    private val requestCodeWriteExternalStorage = 123
+    var currentModule: Module? = null
 
     //This is the way to declare Static final in Kotlin
     companion object {
@@ -16,11 +40,10 @@ class MainActivity : AppCompatActivity() {
         const val NO_THUMBNAIL = "No Thumbnail"
     }
 
-    //Layout option prone to change
-    private var layoutOption: String? = null
-
-    //List holding the dummy information
-    private var listItems: MutableList<ItemListUnit>? = null
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        //TODO set checkbox accordingly
+        return super.onPrepareOptionsMenu(menu)
+    }
 
     //This creates a menu that displays 'Settings' on the top right corner.
     //Such Menu can be modified in the Folder app/res/menu/main_menu.xml
@@ -33,64 +56,195 @@ class MainActivity : AppCompatActivity() {
     //This takes the Option from the Layout and sizes the app accordingly
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         super.onOptionsItemSelected(item)
-        //todo instead of calling runadapter, call the fragment
-        when (item.itemId) {
-            R.id.no_thubnail -> {
-                layoutOption = NO_THUMBNAIL
-//                runAdapter()
-                return true
+        val videoFragment = supportFragmentManager.findFragmentById(R.id.fragment_videos) as VideosFragment
+        return when (item.itemId) {
+            R.id.action_refresh -> {
+                videoFragment.fetchVideos(videoFragment.currentModuleId)
+                true
             }
-            R.id.medium -> {
-                layoutOption = MEDIUM
-//                runAdapter()
-                return true
+            R.id.action_auto_download_checkbox -> {
+                val shouldAutoDownload = item.isChecked.not()
+                dataCenter.setModuleToNeedsDownload(currentModule, shouldAutoDownload)
+                item.isChecked = shouldAutoDownload
+                true
             }
-            R.id.large -> {
-                layoutOption = LARGE
-//                runAdapter()
-                return true
-            }
-            else -> return false
+            //todo figure out how to deal with these thumbnails later
+            else -> false
         }
-
     }
 
+    /**
+     * TODO think about savedinstancestate
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //Default layoutOption
-        layoutOption = NO_THUMBNAIL
+        dataCenter = DataCenterImpl(this)
 
-        //Method that Instantiates and runs the adapter
-//        runAdapter()
+        //toolbar and drawer setup
+        setSupportActionBar(toolbar)
+        val drawerToggle = ActionBarDrawerToggle(this, drawer_layout, toolbar, R.string.content_description_open_drawer, R.string.content_description_close_drawer)
+        drawer_layout.addDrawerListener(drawerToggle)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeButtonEnabled(true)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_menu_light_24dp)
+
+        makeSureWriteExternalStorageIsAvailable()
+
+        dataCenter.getSchoolCodeLocally(object: DataListener<String> {
+            override fun onSuccess(source: Int, result: String?) {
+                dataCenter.getModules(object: DataListener<MutableList<Module>> {
+                    override fun onSuccess(source: Int, result: MutableList<Module>?) {
+                        if (source == DataListener.SOURCE_LOCAL) {
+                            //todo figure out how to add sub header "Modules"
+                            //todo unsafe assumption: local always gets loaded before remote
+                            result?.forEachIndexed { index, module ->
+                                navigation_view.menu.add(
+                                        0,
+                                        module.id.hashCode(),
+                                        index,
+                                        module.name
+                                )
+                            }
+                        } else if (source == DataListener.SOURCE_REMOTE) {
+                            //only add modules that is new
+                            result?.forEach { module ->
+                                val existingModule = navigation_view.menu.findItem(module.id.hashCode())
+                                if (existingModule != null) {
+                                    //module already exist, next
+                                } else {
+                                    navigation_view.menu.add(
+                                            0,
+                                            module.id.hashCode(),
+                                            navigation_view.menu.size(),
+                                            module.name
+                                    )
+                                }
+                            }
+                        }
+                        navigation_view.setNavigationItemSelectedListener { menuItem ->
+                            result?.forEach { thisModule ->
+                                if (thisModule.id.hashCode() == menuItem.itemId) {
+                                    Timber.d("this module = %s", thisModule)
+                                    currentModule = thisModule
+                                    supportActionBar?.title = thisModule.name
+                                    menuItem.isChecked = true
+                                    return@forEach  //module has been found, can skip the rest
+                                }
+                            }
+                            true
+                        }
+                    }
+
+                    override fun onFailure(error: Throwable) {
+                        //todo i need something in the drawer ui to allow user to refresh this list
+                        Timber.d(Throwable("figure out what this could be and fix it", error))
+                    }
+                })
+
+                //schedule download (can run every time because it will get replace)
+                scheduleDownloadService()
+            }
+
+            override fun onFailure(error: Throwable) {
+                //TODO close everything down, go back to SignInActivity
+                Timber.d(Throwable("Probably because no school code", error))
+            }
+        })
     }
 
-    fun runAdapter() {
-        //todo update this: switch from ItemListUnit to Video
-        //POOR IMPLEMENTATION DUE TO MY POOR KOTLIN SKILLS
-        //Also, just a temporal implementation.
-        val someSome = ItemListUnit("January", "http://flaglane.com/download/german-flag/german-flag-large.png", "This is the URL 2")
-        val someSome1 = ItemListUnit("February ", "http://flaglane.com/download/german-flag/german-flag-large.png", "This is the URL 2")
-        val someSome2 = ItemListUnit("March", "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Flag_of_Hong_Kong.svg/2000px-Flag_of_Hong_Kong.svg.png", "This is the URL 2")
-        val someSome3 = ItemListUnit("May", "http://www.freepngimg.com/download/india/4-2-india-flag-png-hd.png", "This is the URL 2")
-        val someSome4 = ItemListUnit("June", "https://upload.wikimedia.org/wikipedia/commons/1/17/Flag_of_Mexico.png", "This is the URL 2")
-        val someSome5 = ItemListUnit("July", "https://drive.google.com/open?id=0BzUGskuag7oNZHR2TFNsbnFxaU0", "This is the URL 2")
-        val someSome6 = ItemListUnit("August", "https://drive.google.com/open?id=0BzUGskuag7oNZHR2TFNsbnFxaU0", "This is the URL 2")
-        val someSome7 = ItemListUnit("September", "https://drive.google.com/open?id=0BzUGskuag7oNZHR2TFNsbnFxaU0", "This is the URL 2")
-        val someSome8 = ItemListUnit("October", "https://drive.google.com/open?id=0BzUGskuag7oNZHR2TFNsbnFxaU0", "This is the URL 2")
-        val someSome9 = ItemListUnit("Noviembre", "https://drive.google.com/open?id=0BzUGskuag7oNZHR2TFNsbnFxaU0", "This is the URL 2")
-        val someSome10 = ItemListUnit("Diciembre", "https://drive.google.com/open?id=0BzUGskuag7oNZHR2TFNsbnFxaU0", "This is the URL 2")
-        val someSome11 = ItemListUnit("THIS IS A VERY LONG STRING TO CHECK HOW LONG TEXT BEHAVES IN THIS SITUATION. IT'S ALSO FRIDAY TODAY, RAINY DAY", "http://flaglane.com/download/german-flag/german-flag-large.png", "This is the URL 2")
+    /**
+     * TODO make a lot of the params changeable (in setting)
+     * TODO better error messages
+     * schedule the download service to run under certain condition
+     */
+    private fun scheduleDownloadService() {
+        val dispatcher = FirebaseJobDispatcher(GooglePlayDriver(this@MainActivity))
+        val periodicity = TimeUnit.HOURS.toSeconds(6).toInt()
+        val toleranceInterval = TimeUnit.HOURS.toSeconds(2).toInt()
+        val downloadJob = dispatcher.newJobBuilder()
+                .setService(VideosUpdateService::class.java)
+                .setTag("download-service")
+                .setRecurring(true)
+                .setTrigger(Trigger.executionWindow(periodicity, periodicity + toleranceInterval))
+                .setLifetime(Lifetime.FOREVER)
+                .setReplaceCurrent(true)
+                .setRetryStrategy(RetryStrategy.DEFAULT_LINEAR)
+                .setConstraints(
+                        Constraint.DEVICE_IDLE
+                )
+                .build()
+        val scheduleResult = dispatcher.schedule(downloadJob)
+        when (scheduleResult) {
+            FirebaseJobDispatcher.SCHEDULE_RESULT_SUCCESS -> Timber.d("schedule download successful")
+            FirebaseJobDispatcher.SCHEDULE_RESULT_UNKNOWN_ERROR -> Timber.e("unknown error when scheduling download service!")
+            FirebaseJobDispatcher.SCHEDULE_RESULT_NO_DRIVER_AVAILABLE -> Timber.e("driver not available when scheduling download service!")
+            FirebaseJobDispatcher.SCHEDULE_RESULT_UNSUPPORTED_TRIGGER -> Timber.e("unsupported trigger! wrong implementation!")
+            FirebaseJobDispatcher.SCHEDULE_RESULT_BAD_SERVICE -> Timber.e("bad service (whatever it means)")
+        }
+    }
 
-        //List that will hold the dummy information
-        listItems = mutableListOf(someSome, someSome1, someSome2, someSome3, someSome4, someSome5, someSome6, someSome7, someSome8, someSome9, someSome10, someSome11)
+    /**
+     *
+     */
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            requestCodeWriteExternalStorage -> {
+                if (!grantResults.isNotEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    showRationaleForWriteExternalStorage()
+                }
+            }
+        }
+    }
 
-        //Instantiating the adapter with the magic of Kotlin:
-//        recycler_view.layoutManager = LinearLayoutManager(this)
-//        recycler_view.setHasFixedSize(true)
-        //Instantiating the Adapter with the List, The Context, and the Layout Size Setting & Setting the adapter to Recycler View
-//        recycler_view.adapter = RecyclerViewAdapter(listItems, this, layoutOption)
+    /**
+     * Make sure the WRITE_EXTERNAL_STORAGE is granted, so that I can download stuff in background
+     * overnight
+     */
+    private fun makeSureWriteExternalStorageIsAvailable() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE))
+            {
+                showRationaleForWriteExternalStorage()
+            } else {
+                askForExternalStoragePermission()
+            }
+        }
+    }
 
+    /**
+     * Ask for external storage permission (dah!)
+     * Since there are 2 places in this activity that uses this, i just wrap it and make it look
+     * nicer
+     */
+    private fun askForExternalStoragePermission() {
+        ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                requestCodeWriteExternalStorage
+        )
+    }
+
+    /**
+     * If the system things that we need to explain to user why this permission is needed, this will
+     * create a dialog to explain why
+     */
+    private fun showRationaleForWriteExternalStorage() {
+        AlertDialog.Builder(this)
+                .setTitle(getString(R.string.title_rationale_ext_storage))
+                .setMessage(getString(R.string.message_rationale_ext_storage))
+                .setPositiveButton(getString(R.string.button_try_again)) { dialog, _ ->
+                    dialog.dismiss()
+                    askForExternalStoragePermission()   //i.e. try again
+                }
+                .setNegativeButton(getString(R.string.button_cancel)) { dialog, _ ->
+                    dialog.dismiss()
+//                    TODO("mark it to somewhere")
+                }
+                .show()
     }
 }

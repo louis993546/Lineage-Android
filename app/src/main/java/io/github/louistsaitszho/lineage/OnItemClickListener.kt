@@ -5,7 +5,7 @@ package io.github.louistsaitszho.lineage
  * Useful for RecyclerView and stuff
  * Created by louistsai on 31.08.17.
  */
-interface OnItemClickListener<T> {
+interface OnItemClickListener<in T> {
 
     /**
      * When something is being selected

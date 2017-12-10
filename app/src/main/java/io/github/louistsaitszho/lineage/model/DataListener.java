@@ -8,12 +8,14 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
+ * TODO split this into nullable and non-nullable version
  * Created by Louis on 27.08.17.
  */
 public interface DataListener<ReturnType> {
+    int SOURCE_NULL = -1;
     int SOURCE_REMOTE = 0;
     int SOURCE_LOCAL = 1;
-    @IntDef({SOURCE_REMOTE, SOURCE_LOCAL})
+    @IntDef({SOURCE_NULL, SOURCE_REMOTE, SOURCE_LOCAL})
     @Retention(RetentionPolicy.SOURCE)
     @interface SourceType {}
 

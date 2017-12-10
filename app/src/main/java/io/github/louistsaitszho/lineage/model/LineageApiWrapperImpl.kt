@@ -1,9 +1,10 @@
 package io.github.louistsaitszho.lineage.model
 
-import io.github.louistsaitszho.lineage.ServerConfig
+import io.github.louistsaitszho.lineage.SystemConfig
 import io.github.louistsaitszho.lineage.attributes.VideoAttribute
 import io.github.louistsaitszho.lineage.model.attributes.ModuleAttribute
 import io.github.louistsaitszho.lineage.model.poko.JsonApiResponse
+import io.github.louistsaitszho.lineage.model.poko.attributes.SchoolAttribute
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -15,14 +16,14 @@ import retrofit2.converter.gson.GsonConverterFactory
  * Created by Louis Tsai on 31.08.17.
  */
 class LineageApiWrapperImpl : LineageApiWrapper {
-    private val apiClient : LineageApiInterface
+    private val apiClient: LineageApiInterface
 
     /**
      * Constructor in kotlin looks weird
      */
     init {
         val retrofit = Retrofit.Builder()
-                .baseUrl(ServerConfig.apiHost)
+                .baseUrl(SystemConfig.apiHost)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
         apiClient = retrofit.create(LineageApiInterface::class.java)
@@ -40,5 +41,12 @@ class LineageApiWrapperImpl : LineageApiWrapper {
      */
     override fun getModules(): Call<JsonApiResponse<ModuleAttribute>> {
         return apiClient.fetchModules("123")
+    }
+
+    /**
+     * TODO hard code access token
+     */
+    override fun signIn(schoolCode: String): Call<JsonApiResponse<SchoolAttribute>> {
+        return apiClient.signIn(schoolCode)
     }
 }
