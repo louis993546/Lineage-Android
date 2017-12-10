@@ -3,8 +3,8 @@ package io.github.louistsaitszho.lineage.model
 import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
-import io.github.louistsaitszho.lineage.model.attributes.ModuleAttribute
 import io.github.louistsaitszho.lineage.model.poko.Data
+import io.github.louistsaitszho.lineage.model.poko.attributes.ModuleAttribute
 
 /**
  * Created by louis on 09.11.17.

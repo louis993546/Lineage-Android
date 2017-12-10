@@ -4,8 +4,8 @@ import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import android.net.Uri
-import io.github.louistsaitszho.lineage.attributes.VideoAttribute
 import io.github.louistsaitszho.lineage.model.poko.Data
+import io.github.louistsaitszho.lineage.model.poko.attributes.VideoAttribute
 
 /**
  * TODO should those URLs be URL/URI instead?

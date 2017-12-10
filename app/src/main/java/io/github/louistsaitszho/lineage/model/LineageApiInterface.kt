@@ -1,9 +1,9 @@
 package io.github.louistsaitszho.lineage.model
 
-import io.github.louistsaitszho.lineage.attributes.VideoAttribute
-import io.github.louistsaitszho.lineage.model.attributes.ModuleAttribute
 import io.github.louistsaitszho.lineage.model.poko.JsonApiResponse
+import io.github.louistsaitszho.lineage.model.poko.attributes.ModuleAttribute
 import io.github.louistsaitszho.lineage.model.poko.attributes.SchoolAttribute
+import io.github.louistsaitszho.lineage.model.poko.attributes.VideoAttribute
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Header

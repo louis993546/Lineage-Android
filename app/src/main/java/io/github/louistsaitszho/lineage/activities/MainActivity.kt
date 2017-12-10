@@ -243,7 +243,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 .setNegativeButton(getString(R.string.button_cancel)) { dialog, _ ->
                     dialog.dismiss()
-//                    TODO("mark it to somewhere")
+                    Timber.d("This user denied storage permission!")
                 }
                 .show()
     }

@@ -3,7 +3,6 @@ package io.github.louistsaitszho.lineage.model;
 import java.util.List;
 
 /**
- * TODO need to return Call object so that it can be cancel if needed
  * Created by louistsai on 27.08.17.
  */
 public interface DataCenter {

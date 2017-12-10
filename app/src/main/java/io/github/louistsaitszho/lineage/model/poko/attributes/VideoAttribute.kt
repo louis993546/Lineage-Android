@@ -1,4 +1,4 @@
-package io.github.louistsaitszho.lineage.attributes
+package io.github.louistsaitszho.lineage.model.poko.attributes
 
 /**
  * TODO make thumbnail url non-nullable when i fixed the api

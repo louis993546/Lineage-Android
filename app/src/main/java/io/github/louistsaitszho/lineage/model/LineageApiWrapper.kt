@@ -1,9 +1,9 @@
 package io.github.louistsaitszho.lineage.model
 
-import io.github.louistsaitszho.lineage.attributes.VideoAttribute
-import io.github.louistsaitszho.lineage.model.attributes.ModuleAttribute
 import io.github.louistsaitszho.lineage.model.poko.JsonApiResponse
+import io.github.louistsaitszho.lineage.model.poko.attributes.ModuleAttribute
 import io.github.louistsaitszho.lineage.model.poko.attributes.SchoolAttribute
+import io.github.louistsaitszho.lineage.model.poko.attributes.VideoAttribute
 import retrofit2.Call
 
 /**
@@ -21,13 +21,13 @@ interface LineageApiWrapper {
      * @param moduleId is the id of the module you want to access
      * @return a call object (so that you can do whatever you want to it)
      */
-    fun getVideo(moduleId: String): Call<JsonApiResponse<VideoAttribute>>
+    fun getVideo(moduleId: String, accessToken: String): Call<JsonApiResponse<VideoAttribute>>
 
     /**
      * Call GET modules
      * @return a call object (so that you can do whatever you want to it)
      */
-    fun getModules(): Call<JsonApiResponse<ModuleAttribute>>
+    fun getModules(accessToken: String): Call<JsonApiResponse<ModuleAttribute>>
 
     /**
      *

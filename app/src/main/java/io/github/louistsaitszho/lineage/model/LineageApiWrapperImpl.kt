@@ -1,10 +1,10 @@
 package io.github.louistsaitszho.lineage.model
 
 import io.github.louistsaitszho.lineage.SystemConfig
-import io.github.louistsaitszho.lineage.attributes.VideoAttribute
-import io.github.louistsaitszho.lineage.model.attributes.ModuleAttribute
 import io.github.louistsaitszho.lineage.model.poko.JsonApiResponse
+import io.github.louistsaitszho.lineage.model.poko.attributes.ModuleAttribute
 import io.github.louistsaitszho.lineage.model.poko.attributes.SchoolAttribute
+import io.github.louistsaitszho.lineage.model.poko.attributes.VideoAttribute
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -30,21 +30,21 @@ class LineageApiWrapperImpl : LineageApiWrapper {
     }
 
     /**
-     * TODO hard code access token
+     * implementation of get videos in a particular module: by asking retrofit to get it
      */
-    override fun getVideo(moduleId: String): Call<JsonApiResponse<VideoAttribute>> {
-        return apiClient.fetchVideos("123", moduleId)
+    override fun getVideo(moduleId: String, accessToken: String): Call<JsonApiResponse<VideoAttribute>> {
+        return apiClient.fetchVideos(accessToken, moduleId)
     }
 
     /**
-     * TODO hard code access token
+     * implementation of get modules: by asking retrofit to get it
      */
-    override fun getModules(): Call<JsonApiResponse<ModuleAttribute>> {
-        return apiClient.fetchModules("123")
+    override fun getModules(accessToken: String): Call<JsonApiResponse<ModuleAttribute>> {
+        return apiClient.fetchModules(accessToken)
     }
 
     /**
-     * TODO hard code access token
+     * sign in (it should be pretty obvious what it does)
      */
     override fun signIn(schoolCode: String): Call<JsonApiResponse<SchoolAttribute>> {
         return apiClient.signIn(schoolCode)

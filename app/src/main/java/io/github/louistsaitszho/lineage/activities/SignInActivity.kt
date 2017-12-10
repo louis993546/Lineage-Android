@@ -31,9 +31,8 @@ class SignInActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(error: Throwable) {
-                    //todo hard code string
-                    Toast.makeText(this@SignInActivity, "Sign in failed. Please try again", Toast.LENGTH_LONG).show()
-                    text_input_layout_school_code.error = "Incorrect school code!"
+                    Toast.makeText(this@SignInActivity, R.string.error_toast_sign_in_failed, Toast.LENGTH_LONG).show()
+                    text_input_layout_school_code.error = getString(R.string.error_til_wrong_school_code)
                     if (view_switcher_sign_in.currentView is ProgressBar) {
                         view_switcher_sign_in.showNext()
                     }

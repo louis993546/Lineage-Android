@@ -23,4 +23,6 @@
     <string name="error_title_download_video_impossible">Cannot download video</string>
     <string name="error_description_download_video_impossible">Something is wrong with the video and it cannot be download. Please report to us!</string>
     <string name="button_ok">OK</string>
+    <string name="error_toast_sign_in_failed">Sign in failed. Please try again</string>
+    <string name="error_til_wrong_school_code">Incorrect school code!</string>
 </resources>

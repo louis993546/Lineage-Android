@@ -6,10 +6,17 @@ import android.support.v7.app.AppCompatActivity
 import io.github.louistsaitszho.lineage.model.DataCenterImpl
 import io.github.louistsaitszho.lineage.model.DataListener
 
+/**
+ * Entry point of the app
+ */
 class SplashActivity : AppCompatActivity() {
+
+    /**
+     * It does 1 thing: open MainActivity or SignInActivity accordingly
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //todo check if there is school code, if yes, open MainActivity; else, open SignInActivity
+
         val dataCenter = DataCenterImpl(this)
         dataCenter.getSchoolCodeLocally(object : DataListener<String> {
             override fun onSuccess(source: Int, result: String?) {
